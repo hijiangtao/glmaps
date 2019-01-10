@@ -1,0 +1,29 @@
+{
+  "name": "glmaps",
+  "version": "0.0.1",
+  "description": "Earths and maps powered by Three.js and Deck.gl, easy to use",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hijiangtao/glmaps.git"
+  },
+  "keywords": [
+    "WebGL",
+    "Deck.gl",
+    "Three.js",
+    "Visualization",
+    "GL",
+    "VIS",
+    "Map",
+    "Earth"
+  ],
+  "author": "hijiangtao",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hijiangtao/glmaps/issues"
+  },
+  "homepage": "https://github.com/hijiangtao/glmaps#readme"
+}
