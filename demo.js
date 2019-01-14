@@ -1,5 +1,6 @@
 import FadeScatterplotLayer from './layers/ScatterplotLayer';
 import BrushArcLayer from './layers/ArcLayer/animate';
+import AugmentHexagonLayer from './layers/HexagonLayer';
 
 import React, { PureComponent } from 'react';
 import ReactDOM from "react-dom";
@@ -11,6 +12,7 @@ const MAPBOX_TOKEN = '';
 const Layers = {
   BrushArcLayer,
   FadeScatterplotLayer,
+  AugmentHexagonLayer,
 }
 
 const configs = {
@@ -32,6 +34,30 @@ const configs = {
     getPosition: d => d.COORDINATES,
     getRadius: () => 14000,
     showWaveAnimation: true,
+    url: './data/meteorites.json',
+  },
+  AugmentHexagonLayer: {
+    id: '3d-heatmap',
+    colorRange: [
+      [34,93,202],
+      [37,102,222],
+      [56,115,225],
+      [76,129,228],
+      [96,143,231],
+      [116,157,234],
+    ],
+    coverage: 1,
+    elevationRange: [0, 3000],
+    elevationScale: 50,
+    extruded: true,
+    getPosition: d => d.COORDINATES,
+    getElevationValue: d => d.reduce((accumulator, currentValue) => currentValue ? accumulator + currentValue.SPACES : accumulator, 0),
+    getColorValue: d => d.reduce((accumulator, currentValue) => currentValue ? accumulator + currentValue.SPACES : accumulator, 0),
+    opacity: 1,
+    pickable: true,
+    radius: 10000,
+    upperPercentile: 100,
+    showAnimation: true,
     url: './data/meteorites.json',
   }
 }
@@ -61,6 +87,7 @@ const fetchData = ({type = 'BrushArcLayer', url = './data/counties.json'}) => ne
       break;
     
     case 'FadeScatterplotLayer':
+    case 'AugmentHexagonLayer':
       fetch(url)
       .then(res => res.json())
       .then(res => {
@@ -157,6 +184,7 @@ class PaintMap extends PureComponent {
           value={this.state.layer} >
           <option value="BrushArcLayer">BrushArcLayer</option>
           <option value="FadeScatterplotLayer">FadeScatterplotLayer</option>
+          <option value="AugmentHexagonLayer">AugmentHexagonLayer</option>
         </select>
 
         <DeckGL
