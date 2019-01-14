@@ -29,13 +29,13 @@
   },
   "homepage": "https://github.com/hijiangtao/glmaps#readme",
   "dependencies": {
-    "@deck.gl/experimental-layers": "^6.3.3",
+    "@deck.gl/experimental-layers": "^6.3.4",
     "@mapbox/mapbox-gl-language": "^0.10.0",
     "d3-scale": "^2.1.2",
-    "deck.gl": "^6.3.3",
+    "deck.gl": "^6.3.4",
     "hammerjs": "^2.0.8",
     "react": "^16.7.0",
-    "react-map-gl": "^4.0.6",
+    "react-map-gl": "^4.0.7",
     "three": "^0.100.0",
     "whatwg-fetch": "^3.0.0"
   },
@@ -50,7 +50,7 @@
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
     "react-dom": "^16.7.0",
-    "webpack": "^4.28.1",
+    "webpack": "^4.28.4",
     "webpack-cli": "^3.2.1",
     "webpack-dev-server": "^3.1.14"
   }

@@ -1,3 +1,10 @@
+/*
+ * @Author: hijiangtao (hijiangtao@gmail.com) 
+ * @Date: 2019-01-14 17:44:05 
+ * @Description: Hexagon Animation layer.
+ * @Last Modified time: 2019-01-14 17:44:05 
+ */
+
 import {HexagonLayer, CompositeLayer} from 'deck.gl';
 
 const colorRange = [
@@ -68,8 +75,6 @@ class AugmentHexagonLayer extends CompositeLayer {
       }
 
       const _animateHeight = () => {
-        console.log(elevationScale)
-        // const {elevationScale} = this.state;
         if (elevationScale >= ELEVATION_SCALE.max) {
           elevationScale = OVERFLOW_FLAG;
           _stopAnimate(); // eslint-disable-line

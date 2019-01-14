@@ -1,77 +1,25 @@
 import FadeScatterplotLayer from './layers/ScatterplotLayer';
 import BrushArcLayer from './layers/ArcLayer/animate';
 import AugmentHexagonLayer from './layers/HexagonLayer';
+import ScreenGridLayer from './layers/ScreenGridLayer';
+// import TripLayer from './layers/TripLayer';
 
 import React, { PureComponent } from 'react';
 import ReactDOM from "react-dom";
 import {StaticMap} from 'react-map-gl';
 import DeckGL from 'deck.gl';
 
-const MAPBOX_TOKEN = '';
+import {LAYER_CONFIGS, INIT_LAYER} from './examples/configs';
+
+const MAPBOX_TOKEN = 'pk.eyJ1IjoiY3NuIiwiYSI6ImNpdnRvam1qeDAwMXgyenRlZjZiZWc1a2wifQ.Gr5pLJzG-1tucwY4h-rGdA';
 
 const Layers = {
   BrushArcLayer,
   FadeScatterplotLayer,
   AugmentHexagonLayer,
+  ScreenGridLayer,
+  // TripLayer, // Issue#2569 need to be solved
 }
-
-const configs = {
-  BrushArcLayer: {
-    id: 'arc-brush',
-    getSourcePosition: d => d.source,  
-    getTargetPosition: d => d.target, 
-    showBrushAnimation: true,
-    speed: 0.005,
-    url: './data/counties.json',
-  },
-  FadeScatterplotLayer: {
-    id: 'scatterplot-fade',
-    pickable: true,
-    opacity: 0.8,
-    radiusScale: 10,
-    radiusMinPixels: 0,
-    radiusMaxPixels: 200,
-    getPosition: d => d.COORDINATES,
-    getRadius: () => 14000,
-    showWaveAnimation: true,
-    url: './data/meteorites.json',
-  },
-  AugmentHexagonLayer: {
-    id: '3d-heatmap',
-    colorRange: [
-      [34,93,202],
-      [37,102,222],
-      [56,115,225],
-      [76,129,228],
-      [96,143,231],
-      [116,157,234],
-    ],
-    coverage: 1,
-    elevationRange: [0, 3000],
-    elevationScale: 50,
-    extruded: true,
-    getPosition: d => d.COORDINATES,
-    getElevationValue: d => d.reduce((accumulator, currentValue) => currentValue ? accumulator + currentValue.SPACES : accumulator, 0),
-    getColorValue: d => d.reduce((accumulator, currentValue) => currentValue ? accumulator + currentValue.SPACES : accumulator, 0),
-    opacity: 1,
-    pickable: true,
-    radius: 10000,
-    upperPercentile: 100,
-    showAnimation: true,
-    url: './data/meteorites.json',
-  }
-}
-
-const INIT_LAYER = 'FadeScatterplotLayer';
-const INIT_VIEW_STATE = {
-  longitude: -104.96,
-  latitude: 40.66033,
-  zoom: 3,
-  minZoom: 2,
-  maxZoom: 16,
-  pitch: 45,
-  bearing: 0,
-};
 
 /**
  * Get Demo Data according to Layer type and Data url
@@ -88,10 +36,11 @@ const fetchData = ({type = 'BrushArcLayer', url = './data/counties.json'}) => ne
     
     case 'FadeScatterplotLayer':
     case 'AugmentHexagonLayer':
+    case 'ScreenGridLayer':
       fetch(url)
       .then(res => res.json())
       .then(res => {
-        const slice = res.slice(0, 100);
+        const slice = res.slice(0);
         return slice.map((item) => {
           return {
             COORDINATES: [...item.coordinates],
@@ -101,7 +50,9 @@ const fetchData = ({type = 'BrushArcLayer', url = './data/counties.json'}) => ne
       })
       .then(res => resolve(res));
       break;
+    case 'TripLayer':
     default:
+      resolve({});
       break;
   }
   
@@ -114,7 +65,7 @@ class PaintMap extends PureComponent {
     
     fetchData({
       type: INIT_LAYER,
-      url: configs[INIT_LAYER].url
+      url: LAYER_CONFIGS[INIT_LAYER].url
     })
     .then((res) => {
       this.toggleRefresh({res, layer: INIT_LAYER});
@@ -148,7 +99,7 @@ class PaintMap extends PureComponent {
     return [
       new Layer({
         data: this.data,
-        ...configs[layer],
+        ...LAYER_CONFIGS[layer],
       }),
     ];
   }
@@ -158,7 +109,7 @@ class PaintMap extends PureComponent {
 
     fetchData({
       type: layer,
-      url: configs[layer].url,
+      url: LAYER_CONFIGS[layer].url,
     })
     .then((res) => {
       this.toggleRefresh({res, layer});
@@ -168,41 +119,49 @@ class PaintMap extends PureComponent {
 
   render() {
     const {
-      initialViewState = INIT_VIEW_STATE, 
       controller = true, 
-      baseMap = true
+      baseMap = true,
     } = this.props;
+
+    const {layer} = this.state;
+    const initialViewState = LAYER_CONFIGS[layer].INIT_VIEW_STATE;
 
     return (
       <section>
         <select 
-          style={{
-            position: 'absolute',
-            bottom: '1px',
-          }}
           onChange={this.onSelectChangeHandler}
           value={this.state.layer} >
           <option value="BrushArcLayer">BrushArcLayer</option>
           <option value="FadeScatterplotLayer">FadeScatterplotLayer</option>
           <option value="AugmentHexagonLayer">AugmentHexagonLayer</option>
+          <option value="ScreenGridLayer">ScreenGridLayer</option>
+          {/* <option value="TripLayer">TripLayer</option> */}
+          
         </select>
 
-        <DeckGL
-          width="100%" 
-          height="90%" 
-          layers={this._renderLayers()}
-          initialViewState={initialViewState}
-          controller={controller}
-        >
-          {baseMap && (
-            <StaticMap
-              reuseMaps
-              mapStyle="mapbox://styles/mapbox/dark-v9"
-              preventStyleDiffing
-              mapboxApiAccessToken={MAPBOX_TOKEN}
-            />
-          )}
-        </DeckGL>
+        <div style={{
+          position: 'relative',
+          marginTop: '2px',
+          width: '100%',
+          height: '34vw',
+        }}>
+          <DeckGL
+            width="100%" 
+            height="90%" 
+            layers={this._renderLayers()}
+            initialViewState={initialViewState}
+            controller={controller}
+          >
+            {baseMap && (
+              <StaticMap
+                reuseMaps
+                mapStyle="mapbox://styles/mapbox/dark-v9"
+                preventStyleDiffing
+                mapboxApiAccessToken={MAPBOX_TOKEN}
+              />
+            )}
+          </DeckGL>
+        </div>
       </section>
     );
   }
