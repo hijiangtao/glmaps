@@ -1,47 +1,113 @@
-import "babel-register";
 import FadeScatterplotLayer from './layers/ScatterplotLayer';
+import BrushArcLayer from './layers/ArcLayer/animate';
 
 import React, { PureComponent } from 'react';
 import ReactDOM from "react-dom";
 import {StaticMap} from 'react-map-gl';
 import DeckGL from 'deck.gl';
 
+const MAPBOX_TOKEN = '';
 
-const fetchData = (callback) => new Promise((resolve, reject) => {
-  fetch('./data/meteorites.json').then((response) => {
-    return response.json();
-  }, () => {
-    return [];
-  }).then((res) => {
-    return res.map((item) => {
-      // console.log(item);
-      // debugger
-      return {
-        COORDINATES: [...item.coordinates],
-        SPACES: parseInt(item.mass),
-      }
-    })
-  }).then(callback);
+const Layers = {
+  BrushArcLayer,
+  FadeScatterplotLayer,
+}
+
+const configs = {
+  BrushArcLayer: {
+    id: 'arc-brush',
+    getSourcePosition: d => d.source,  
+    getTargetPosition: d => d.target, 
+    showBrushAnimation: true,
+    speed: 0.005,
+    url: './data/counties.json',
+  },
+  FadeScatterplotLayer: {
+    id: 'scatterplot-fade',
+    pickable: true,
+    opacity: 0.8,
+    radiusScale: 10,
+    radiusMinPixels: 0,
+    radiusMaxPixels: 200,
+    getPosition: d => d.COORDINATES,
+    getRadius: () => 14000,
+    showWaveAnimation: true,
+    url: './data/meteorites.json',
+  }
+}
+
+const INIT_LAYER = 'FadeScatterplotLayer';
+const INIT_VIEW_STATE = {
+  longitude: -104.96,
+  latitude: 40.66033,
+  zoom: 3,
+  minZoom: 2,
+  maxZoom: 16,
+  pitch: 45,
+  bearing: 0,
+};
+
+/**
+ * Get Demo Data according to Layer type and Data url
+ * @param {*} param0 
+ */
+const fetchData = ({type = 'BrushArcLayer', url = './data/counties.json'}) => new Promise((resolve, reject) => {
+  switch (type) {
+    case 'BrushArcLayer':
+      fetch(url)
+      .then(res => res.json())
+      .then(res => resolve(res))
+      .catch(err => reject(err));
+      break;
+    
+    case 'FadeScatterplotLayer':
+      fetch(url)
+      .then(res => res.json())
+      .then(res => {
+        const slice = res.slice(0, 100);
+        return slice.map((item) => {
+          return {
+            COORDINATES: [...item.coordinates],
+            SPACES: parseInt(item.mass),
+          }
+        })
+      })
+      .then(res => resolve(res));
+      break;
+    default:
+      break;
+  }
+  
 })
 
 
-class FadeScatterplotMap extends PureComponent {
+class PaintMap extends PureComponent {
   constructor(props) {
     super(props);
-    fetchData(this.toggleRefresh);
+    
+    fetchData({
+      type: INIT_LAYER,
+      url: configs[INIT_LAYER].url
+    })
+    .then((res) => {
+      this.toggleRefresh({res, layer: INIT_LAYER});
+    })
+    .catch(err => console.log(err));
   }
 
   state = {
-    refresh: false
+    layer: INIT_LAYER,
+    refresh: false,
   }
-  
-  toggleRefresh = (data) => {
-    console.log(data)
-    this.data = data;
+
+  toggleRefresh = ({res, layer}) => {
+    this.data = res;
+
     this.setState((prevState) => {
       return {
         ...prevState,
         refresh: !prevState.refresh,
+        layer,
       }
     });
   }
@@ -49,56 +115,70 @@ class FadeScatterplotMap extends PureComponent {
   _renderLayers = () => {
     if (!this.data) return [];
 
+    const {layer} = this.state;
+    const Layer = Layers[layer];
+
     return [
-      new FadeScatterplotLayer({
-        id: 'scatterplot-fade',
+      new Layer({
         data: this.data,
-        // pickable: true,
-        opacity: 0.8,
-        radiusScale: 10,
-        radiusMinPixels: 0,
-        radiusMaxPixels: 200,
-        getPosition: d => d.COORDINATES,
-        getRadius: () => 14000,
+        ...configs[layer],
       }),
     ];
   }
 
+  onSelectChangeHandler = ({target}) => {
+    const layer = target.value;
+
+    fetchData({
+      type: layer,
+      url: configs[layer].url,
+    })
+    .then((res) => {
+      this.toggleRefresh({res, layer});
+    })
+    .catch(err => console.log(err));
+  }
+
   render() {
     const {
-      initialViewState = {
-        longitude: 28.96,
-        latitude: 13.66033,
-        zoom: 3,
-        minZoom: 2,
-        maxZoom: 16,
-        pitch: 0,
-        bearing: 0,
-      }, 
+      initialViewState = INIT_VIEW_STATE, 
       controller = true, 
       baseMap = true
     } = this.props;
 
     return (
-      <DeckGL
-        width="100%" 
-        height="100%" 
-        layers={this._renderLayers()}
-        initialViewState={initialViewState}
-        controller={controller}
-      >
-        {baseMap && (
-          <StaticMap
-            reuseMaps
-            mapStyle="mapbox://styles/mapbox/dark-v9"
-            preventStyleDiffing
-            mapboxApiAccessToken={MAPBOX_TOKEN}
-          />
-        )}
-      </DeckGL>
+      <section>
+        <select 
+          style={{
+            position: 'absolute',
+            bottom: '1px',
+          }}
+          onChange={this.onSelectChangeHandler}
+          value={this.state.layer} >
+          <option value="BrushArcLayer">BrushArcLayer</option>
+          <option value="FadeScatterplotLayer">FadeScatterplotLayer</option>
+        </select>
+
+        <DeckGL
+          width="100%" 
+          height="90%" 
+          layers={this._renderLayers()}
+          initialViewState={initialViewState}
+          controller={controller}
+        >
+          {baseMap && (
+            <StaticMap
+              reuseMaps
+              mapStyle="mapbox://styles/mapbox/dark-v9"
+              preventStyleDiffing
+              mapboxApiAccessToken={MAPBOX_TOKEN}
+            />
+          )}
+        </DeckGL>
+      </section>
     );
   }
 }
 
 const wrapper = document.getElementById("root");
-wrapper ? ReactDOM.render(<FadeScatterplotMap />, wrapper) : false;
+wrapper ? ReactDOM.render(<PaintMap />, wrapper) : false;

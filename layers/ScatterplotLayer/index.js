@@ -1,7 +1,80 @@
+/*
+ * @Author: hijiangtao (hijiangtao@gmail.com) 
+ * @Date: 2019-01-11 15:00:17 
+ * @Description: A Layer based on ScatterplotLayer, which enable point fade-out animation on Scatterplot.
+ * @Color schema: [255,0,0] to [255,140,0]
+ * @Last Modified time: 2019-01-11 15:00:38
+ */
+
 import {ScatterplotLayer, CompositeLayer} from 'deck.gl';
+// import AnimationLayer from '../AnimationLayer';
 
 const MAX_RADIUSSCALE = 8; // Default Max Display radiusScale
 const OVERFLOW_FLAG = 9999; // Animation End Flag
+
+// class FadeScatterplotLayer extends AnimationLayer {
+//   initializeState() {
+//     // super.initializeState();
+
+//     this.state = {
+//       maxSpaces: 1,
+//     }
+//   }
+
+//   shouldUpdateState(props) {
+//     super.shouldUpdateState(props);
+//   }
+
+//   updateState({props, oldProps, changeFlags}) {
+//     super.updateState({props, oldProps, changeFlags});
+
+//     /**
+//      * Animaiton trigger judgement
+//      */
+//     if (props.data && props.data.length) {
+//       let maxSpaces = 1;
+//       props.data.map((d) => {
+//         if (d.SPACES > maxSpaces) {
+//           maxSpaces = d.SPACES;
+//         }
+//       });
+//       this.setState({maxSpaces});
+
+//       if (!props.showWaveAnimation) return ;
+//     }
+//   }
+
+//   renderLayers() {
+//     let {updateTriggers = {}, showWaveAnimation, data, ...otherProps} = this.props;
+//     const {radiusScale, MAX_RADIUSSCALE} = this.state;
+//     const {maxSpaces} = this.state;
+
+//     console.log('Scatterplot Layer State', this.state);
+
+//     if (showWaveAnimation) {
+//       otherProps.radiusScale = radiusScale;
+//     }
+    
+//     if (radiusScale === MAX_RADIUSSCALE) return [];
+
+//     const alpha = showWaveAnimation ? 255 * (MAX_RADIUSSCALE - radiusScale) / MAX_RADIUSSCALE : 255;
+
+//     const layerProps = {
+//       LayerType: ScatterplotLayer,
+//       ...otherProps,
+//       data,
+//       getColor: d => [255, (maxSpaces - d.SPACES) / maxSpaces * 140, 0, alpha],
+//       updateTriggers: {
+//         ...updateTriggers,
+//         getColor: [radiusScale],
+//       },
+//     };
+
+//     return [
+//       new ScatterplotLayer(layerProps)
+//     ]
+//   }
+// }
 
 class FadeScatterplotLayer extends CompositeLayer {
   initializeState() {
@@ -15,21 +88,33 @@ class FadeScatterplotLayer extends CompositeLayer {
   }
 
   shouldUpdateState({changeFlags}) {
-    if (changeFlags.stateChanged && this.state.radiusScale !== OVERFLOW_FLAG) {
+    if (changeFlags.propsChanged || changeFlags.dataChanged || changeFlags.stateChanged && this.state.radiusScale !== OVERFLOW_FLAG) {
       return true;
     }
+
+    return false;
   }
 
   updateState({props, oldProps, changeFlags}) {
     super.updateState({props, oldProps, changeFlags});
+    const {propsChanged, stateChanged, dataChanged} = changeFlags;
+    if (!propsChanged && !dataChanged && stateChanged) return false;
 
-    this.setState({
-      data: props.data || [],
-      MAX_RADIUSSCALE: props.MAX_RADIUSSCALE || MAX_RADIUSSCALE,
-    })
+    if (propsChanged) {
+      this.setState((prevState) => {
+        return {
+          ...prevState,
+          data: props.data || prevState.data,
+          MAX_RADIUSSCALE: props.radiusScale || prevState.MAX_RADIUSSCALE,
+        }
+      })
+    }
 
+    /**
+     * Animaiton trigger judgement
+     */
     if (props.data && props.data.length) {
-      // 新数据进入后更新
+      // Get max spaces in datasets
       let maxSpaces = 1;
       props.data.map((d) => {
         if (d.SPACES > maxSpaces) {
@@ -38,13 +123,21 @@ class FadeScatterplotLayer extends CompositeLayer {
       });
       this.setState({maxSpaces});
 
+      if (!props.showWaveAnimation) {
+        this.setState({
+          radiusScale: props.radiusScale || MAX_RADIUSSCALE
+        });
+
+        return ;
+      }
+
       let {raf} = this.state;
       raf && cancelAnimationFrame(raf);
 
       /**
-       * 波纹动画函数
+       * Point Spread Animation Method
        */
-      const startFadeAnimation = () => {
+      const startAnimation = () => {
         const { speed = 0.02 } = props;
         let {radiusScale} = this.state;
         if (radiusScale === OVERFLOW_FLAG) {
@@ -60,40 +153,40 @@ class FadeScatterplotLayer extends CompositeLayer {
         this.setState({radiusScale});
     
         if (radiusScale < MAX_RADIUSSCALE) {
-          const raf = window.requestAnimationFrame(startFadeAnimation);
+          const raf = window.requestAnimationFrame(startAnimation);
           this.setState({
             raf
           });
         }
       }
 
-      startFadeAnimation();
+      startAnimation();
     }
   }
 
   renderLayers() {
-    const {data, updateTriggers = {}} = this.props;
+    let {updateTriggers = {}, showWaveAnimation, data, ...otherProps} = this.props;
     const {radiusScale, maxSpaces, MAX_RADIUSSCALE} = this.state;
+    if (showWaveAnimation) {
+      otherProps.radiusScale = radiusScale;
+    }
     
-    if (radiusScale === MAX_RADIUSSCALE) return [];
+    if (radiusScale === OVERFLOW_FLAG) return [];
+
+    const alpha = showWaveAnimation ? 255 * (MAX_RADIUSSCALE - radiusScale) / MAX_RADIUSSCALE : 255;
+
+    const layerProps = {
+      ...otherProps,
+      data,
+      getColor: d => [255, (maxSpaces - d.SPACES) / maxSpaces * 140, 0, alpha],
+      updateTriggers: {
+        ...updateTriggers,
+        getColor: [radiusScale],
+      },
+    };
 
     return [
-      new ScatterplotLayer({
-        id: 'scatterplot-fade',
-        data,
-        // pickable: true,
-        opacity: 0.8,
-        radiusScale,
-        radiusMinPixels: 0,
-        radiusMaxPixels: 200,
-        getPosition: d => d.COORDINATES,
-        getRadius: () => 14000,
-        getColor: d => [255, (maxSpaces - d.SPACES) / maxSpaces * 140, 0, 255 * (MAX_RADIUSSCALE - radiusScale) / MAX_RADIUSSCALE],
-        updateTriggers: {
-          ...updateTriggers,
-          getColor: [radiusScale],
-        },
-      })
+      new ScatterplotLayer(layerProps)
     ]
   }
 }
