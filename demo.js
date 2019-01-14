@@ -11,7 +11,7 @@ import DeckGL from 'deck.gl';
 
 import {LAYER_CONFIGS, INIT_LAYER} from './examples/configs';
 
-const MAPBOX_TOKEN = 'pk.eyJ1IjoiY3NuIiwiYSI6ImNpdnRvam1qeDAwMXgyenRlZjZiZWc1a2wifQ.Gr5pLJzG-1tucwY4h-rGdA';
+const MAPBOX_TOKEN = '';
 
 const Layers = {
   BrushArcLayer,
