@@ -7,15 +7,6 @@
 
 import {HexagonLayer, CompositeLayer} from 'deck.gl';
 
-const colorRange = [
-  [34,93,202],
-  [37,102,222],
-  [56,115,225],
-  [76,129,228],
-  [96,143,231],
-  [116,157,234],
-];
-
 const ELEVATION_SCALE = {min: 1, max: 500};
 const OVERFLOW_FLAG = 9999;
 
@@ -109,7 +100,17 @@ class AugmentHexagonLayer extends CompositeLayer {
   }
 
   renderLayers() {
-    const {radius = 1000, upperPercentile = 100, coverage = 1, extruded = true, elevationRange = [0, 3000], data, showAnimation, ...otherProps} = this.props;
+    const {
+      radius = 1000, 
+      upperPercentile = 100, 
+      coverage = 1, 
+      extruded, 
+      elevationRange, 
+      data, 
+      colorRange,
+      showAnimation, 
+      ...otherProps
+    } = this.props;
     const {elevationScale} = this.state;
     if (showAnimation) {
       otherProps.elevationScale = elevationScale;
@@ -122,6 +123,7 @@ class AugmentHexagonLayer extends CompositeLayer {
       id: 'hexagon-map',
       coverage,
       data,
+      colorRange,
       elevationRange,
       extruded,
       radius,
@@ -148,7 +150,26 @@ AugmentHexagonLayer.defaultProps = {
       specularRatio: 0.2,
       lightsStrength: [0.8, 0.0, 0.8, 0.0],
       numberOfLights: 2,
-    }
+    },
+  },
+  colorRange: {
+    type: 'accessor',
+    value: [
+      [34,93,202],
+      [37,102,222],
+      [56,115,225],
+      [76,129,228],
+      [96,143,231],
+      [116,157,234],
+    ],
+  },
+  elevationRange: {
+    type: 'accessor',
+    value: [0, 3000],
+  },
+  extruded: {
+    type: 'accessor',
+    value: true,
   }
 };
 

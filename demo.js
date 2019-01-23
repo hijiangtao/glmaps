@@ -8,10 +8,17 @@ import React, { PureComponent } from 'react';
 import ReactDOM from "react-dom";
 import {StaticMap} from 'react-map-gl';
 import DeckGL from 'deck.gl';
+import MapboxLanguage from '@mapbox/mapbox-gl-language';
 
 import {LAYER_CONFIGS, INIT_LAYER} from './examples/configs';
 
 const MAPBOX_TOKEN = '';
+
+const addMapControl = (map) => {
+  map.addControl(new MapboxLanguage({
+    defaultLanguage: 'zh',
+  }));
+}
 
 const Layers = {
   BrushArcLayer,
@@ -117,6 +124,18 @@ class PaintMap extends PureComponent {
     .catch(err => console.log(err));
   }
 
+  /**
+   * 图层更改函数
+   * @param {*} event 
+   */
+  addControlHandler = (event) => {
+    const map = this.staticMap.getMap(); // event && event.target;
+    if (map) {
+      addMapControl(map);
+      // map.setLayoutProperty('country-label-lg', 'text-field', ['get', 'name_zh'])
+    }
+  };
+
   render() {
     const {
       controller = true, 
@@ -139,6 +158,8 @@ class PaintMap extends PureComponent {
           
         </select>
 
+        <button onClick={this.addControlHandler}>addMapControl</button>
+
         <div style={{
           position: 'relative',
           marginTop: '2px',
@@ -154,6 +175,8 @@ class PaintMap extends PureComponent {
           >
             {baseMap && (
               <StaticMap
+                onLoad={this.addControlHandler}
+                ref={e => this.staticMap = e}
                 reuseMaps
                 mapStyle="mapbox://styles/mapbox/dark-v9"
                 preventStyleDiffing

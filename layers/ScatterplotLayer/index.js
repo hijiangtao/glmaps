@@ -76,6 +76,23 @@ const OVERFLOW_FLAG = 9999; // Animation End Flag
 //   }
 // }
 
+const quantizeScale = (domain, range, value) => {
+  const domainRange = domain[1] - domain[0];
+  if (domainRange <= 0) {
+    console.warn('quantizeScale: invalid domain, returning range[0]');
+    return range[0];
+  }
+  const step = domainRange / range.length;
+  const idx = Math.floor((value - domain[0]) / step);
+  const clampIdx = Math.max(Math.min(idx, range.length - 1), 0);
+
+  return range[clampIdx];
+}
+
+const getQuantizeScale = (domain, range) => {
+  return value => quantizeScale(domain, range, value.SPACES);
+}
+
 class FadeScatterplotLayer extends CompositeLayer {
   initializeState() {
     this.state = {
@@ -84,6 +101,7 @@ class FadeScatterplotLayer extends CompositeLayer {
       MAX_RADIUSSCALE,
       raf: null,
       maxSpaces: 1,
+      minSpaces: 9999,
     };
   }
 
@@ -100,12 +118,15 @@ class FadeScatterplotLayer extends CompositeLayer {
     const {propsChanged, stateChanged, dataChanged} = changeFlags;
     if (!propsChanged && !dataChanged && stateChanged) return false;
 
-    if (propsChanged) {
+    const prevMaxRadiusScale = this.state.MAX_RADIUSSCALE;
+    const newMaxRadiusScale = props.radiusScale || prevMaxRadiusScale;
+
+    if (propsChanged) {  
       this.setState((prevState) => {
         return {
           ...prevState,
           data: props.data || prevState.data,
-          MAX_RADIUSSCALE: props.radiusScale || prevState.MAX_RADIUSSCALE,
+          MAX_RADIUSSCALE: newMaxRadiusScale,
         }
       })
     }
@@ -116,12 +137,17 @@ class FadeScatterplotLayer extends CompositeLayer {
     if (props.data && props.data.length) {
       // Get max spaces in datasets
       let maxSpaces = 1;
+      let minSpaces = 9999;
       props.data.map((d) => {
         if (d.SPACES > maxSpaces) {
           maxSpaces = d.SPACES;
         }
+
+        if (d.SPACES < minSpaces) {
+          minSpaces = d.SPACES;
+        }
       });
-      this.setState({maxSpaces});
+      this.setState({maxSpaces, minSpaces});
 
       if (!props.showWaveAnimation) {
         this.setState({
@@ -139,7 +165,7 @@ class FadeScatterplotLayer extends CompositeLayer {
        */
       const startAnimation = () => {
         const { speed = 0.02 } = props;
-        let {radiusScale} = this.state;
+        let {radiusScale, MAX_RADIUSSCALE} = this.state;
         if (radiusScale === OVERFLOW_FLAG) {
           radiusScale = 0;
         }
@@ -165,20 +191,29 @@ class FadeScatterplotLayer extends CompositeLayer {
   }
 
   renderLayers() {
-    let {updateTriggers = {}, showWaveAnimation, data, ...otherProps} = this.props;
-    const {radiusScale, maxSpaces, MAX_RADIUSSCALE} = this.state;
+    let {updateTriggers = {}, showWaveAnimation, data, colorRange, ...otherProps} = this.props;
+    const {radiusScale, maxSpaces, minSpaces, MAX_RADIUSSCALE} = this.state;
     if (showWaveAnimation) {
       otherProps.radiusScale = radiusScale;
     }
     
-    if (radiusScale === OVERFLOW_FLAG) return [];
-
     const alpha = showWaveAnimation ? 255 * (MAX_RADIUSSCALE - radiusScale) / MAX_RADIUSSCALE : 255;
+    if (radiusScale === OVERFLOW_FLAG) alpha = 0;
+    
+    const newColorRange = colorRange.map(e => {
+      if (!e.length) {
+        console.error('Wrong Color Range Format');
+        return [255,255,255,255];
+      }
+
+      const newColorArray = e.slice(0, 3);
+      return newColorArray.concat(alpha);
+    });
 
     const layerProps = {
       ...otherProps,
       data,
-      getColor: d => [255, (maxSpaces - d.SPACES) / maxSpaces * 140, 0, alpha],
+      getColor: getQuantizeScale([minSpaces, maxSpaces], newColorRange), // d => [255, (maxSpaces - d.SPACES) / maxSpaces * 140, 0, alpha],
       updateTriggers: {
         ...updateTriggers,
         getColor: [radiusScale],
