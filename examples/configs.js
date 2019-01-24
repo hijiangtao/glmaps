@@ -89,6 +89,20 @@ const LAYER_CONFIGS = {
         bearing: 0,
       }
     },
+    IconLayer: {
+      id: 'icon-layer',
+      url: './data/meteorites.json',
+      showCluster: true,
+      INIT_VIEW_STATE: {
+        longitude: -104.96,
+        latitude: 40.66033,
+        zoom: 3,
+        minZoom: 2,
+        maxZoom: 16,
+        pitch: 0,
+        bearing: 0,
+      }
+    },
     TripLayer: {
       buildings: 'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/trips/buildings.json',
       trips: 'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/trips/trips.json',
@@ -105,7 +119,7 @@ const LAYER_CONFIGS = {
     }
   }
   
-  const INIT_LAYER = 'FadeScatterplotLayer';
+  const INIT_LAYER = 'IconLayer';
 
   export {
       INIT_LAYER,

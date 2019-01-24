@@ -2,29 +2,26 @@ import FadeScatterplotLayer from './layers/ScatterplotLayer';
 import BrushArcLayer from './layers/ArcLayer/animate';
 import AugmentHexagonLayer from './layers/HexagonLayer';
 import ScreenGridLayer from './layers/ScreenGridLayer';
+import IconLayer from './layers/IconLayer';
 // import TripLayer from './layers/TripLayer';
 
 import React, { PureComponent } from 'react';
 import ReactDOM from "react-dom";
 import {StaticMap} from 'react-map-gl';
 import DeckGL from 'deck.gl';
-import MapboxLanguage from '@mapbox/mapbox-gl-language';
 
 import {LAYER_CONFIGS, INIT_LAYER} from './examples/configs';
+import {addMapControl} from './examples/tools';
 
 const MAPBOX_TOKEN = '';
 
-const addMapControl = (map) => {
-  map.addControl(new MapboxLanguage({
-    defaultLanguage: 'zh',
-  }));
-}
 
 const Layers = {
   BrushArcLayer,
   FadeScatterplotLayer,
   AugmentHexagonLayer,
   ScreenGridLayer,
+  IconLayer,
   // TripLayer, // Issue#2569 need to be solved
 }
 
@@ -35,6 +32,7 @@ const Layers = {
 const fetchData = ({type = 'BrushArcLayer', url = './data/counties.json'}) => new Promise((resolve, reject) => {
   switch (type) {
     case 'BrushArcLayer':
+    case 'IconLayer':
       fetch(url)
       .then(res => res.json())
       .then(res => resolve(res))
@@ -69,6 +67,7 @@ const fetchData = ({type = 'BrushArcLayer', url = './data/counties.json'}) => ne
 class PaintMap extends PureComponent {
   constructor(props) {
     super(props);
+    this.data = [];
     
     fetchData({
       type: INIT_LAYER,
@@ -129,10 +128,9 @@ class PaintMap extends PureComponent {
    * @param {*} event 
    */
   addControlHandler = (event) => {
-    const map = this.staticMap.getMap(); // event && event.target;
+    const map = event && event.target;
     if (map) {
       addMapControl(map);
-      // map.setLayoutProperty('country-label-lg', 'text-field', ['get', 'name_zh'])
     }
   };
 
@@ -150,15 +148,13 @@ class PaintMap extends PureComponent {
         <select 
           onChange={this.onSelectChangeHandler}
           value={this.state.layer} >
+          <option value="IconLayer">IconLayer</option>
           <option value="BrushArcLayer">BrushArcLayer</option>
           <option value="FadeScatterplotLayer">FadeScatterplotLayer</option>
           <option value="AugmentHexagonLayer">AugmentHexagonLayer</option>
           <option value="ScreenGridLayer">ScreenGridLayer</option>
           {/* <option value="TripLayer">TripLayer</option> */}
-          
         </select>
-
-        <button onClick={this.addControlHandler}>addMapControl</button>
 
         <div style={{
           position: 'relative',

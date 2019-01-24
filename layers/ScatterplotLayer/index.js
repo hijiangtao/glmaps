@@ -106,6 +106,7 @@ class FadeScatterplotLayer extends CompositeLayer {
   }
 
   shouldUpdateState({changeFlags}) {
+    // console.log(this.state.radiusScale)
     if (changeFlags.propsChanged || changeFlags.dataChanged || changeFlags.stateChanged && this.state.radiusScale !== OVERFLOW_FLAG) {
       return true;
     }
@@ -116,6 +117,8 @@ class FadeScatterplotLayer extends CompositeLayer {
   updateState({props, oldProps, changeFlags}) {
     super.updateState({props, oldProps, changeFlags});
     const {propsChanged, stateChanged, dataChanged} = changeFlags;
+
+    // Stop following operation if update is triggered by internal state update
     if (!propsChanged && !dataChanged && stateChanged) return false;
 
     const prevMaxRadiusScale = this.state.MAX_RADIUSSCALE;
@@ -160,33 +163,34 @@ class FadeScatterplotLayer extends CompositeLayer {
       let {raf} = this.state;
       raf && cancelAnimationFrame(raf);
 
-      /**
-       * Point Spread Animation Method
-       */
-      const startAnimation = () => {
-        const { speed = 0.02 } = props;
-        let {radiusScale, MAX_RADIUSSCALE} = this.state;
-        if (radiusScale === OVERFLOW_FLAG) {
-          radiusScale = 0;
-        }
-        radiusScale += speed;
-        
-        if (radiusScale >= MAX_RADIUSSCALE) {
-          radiusScale = OVERFLOW_FLAG;
-          cancelAnimationFrame(raf);
-        }
-    
-        this.setState({radiusScale});
-    
-        if (radiusScale < MAX_RADIUSSCALE) {
-          const raf = window.requestAnimationFrame(startAnimation);
-          this.setState({
-            raf
-          });
-        }
-      }
+      this.startAnimation();
+    }
+  }
 
-      startAnimation();
+  /**
+   * Point Spread Animation Method
+   */
+  startAnimation() {
+    // console.log(this.props)
+    const { speed } = this.props;
+    let {radiusScale, MAX_RADIUSSCALE, raf} = this.state;
+    if (radiusScale === OVERFLOW_FLAG) {
+      radiusScale = 0;
+    }
+    radiusScale += speed;
+    
+    if (radiusScale >= MAX_RADIUSSCALE) {
+      radiusScale = OVERFLOW_FLAG;
+      window.cancelAnimationFrame(raf);
+    }
+
+    this.setState({radiusScale});
+
+    if (radiusScale < MAX_RADIUSSCALE) {
+      const raf = window.requestAnimationFrame(this.startAnimation.bind(this));
+      this.setState({
+        raf
+      });
     }
   }
 
@@ -197,9 +201,10 @@ class FadeScatterplotLayer extends CompositeLayer {
       otherProps.radiusScale = radiusScale;
     }
     
-    const alpha = showWaveAnimation ? 255 * (MAX_RADIUSSCALE - radiusScale) / MAX_RADIUSSCALE : 255;
-    if (radiusScale === OVERFLOW_FLAG) alpha = 0;
-    
+    let alpha = showWaveAnimation ? 255 * (MAX_RADIUSSCALE - radiusScale) / MAX_RADIUSSCALE : 255;
+    const visible = radiusScale !== OVERFLOW_FLAG;
+    if (!visible) alpha = 0;
+
     const newColorRange = colorRange.map(e => {
       if (!e.length) {
         console.error('Wrong Color Range Format');
@@ -218,6 +223,7 @@ class FadeScatterplotLayer extends CompositeLayer {
         ...updateTriggers,
         getColor: [radiusScale],
       },
+      visible,
     };
 
     return [
@@ -230,6 +236,18 @@ FadeScatterplotLayer.layerName = 'FadeScatterplotLayer';
 FadeScatterplotLayer.defaultProps = {
   ...ScatterplotLayer.defaultProps,
   showWaveAnimation: false,
+  speed: 0.02,
+  colorRange: {
+    type: 'accessor',
+    value: [
+      [255,140,0],
+      [255,112,0],
+      [255,84,0],
+      [255,56,0],
+      [255,28,0],
+      [255,0,0],
+    ],
+  }
 };
 
   
