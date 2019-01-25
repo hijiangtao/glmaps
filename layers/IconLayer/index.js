@@ -19,14 +19,22 @@ class IconMap extends CompositeLayer {
       iconAtlas,
       showCluster,
       viewState,
+      getPosition,
+      sizeScale,
+      wrapLongitude,
+      pickable,
+      positionKeyName,
       ...otherProps
     } = this.props;
 
     const layerProps = {
       ...otherProps,
       data,
-      getPosition: d => d.coordinates,
-      positionKeyName: 'coordinates',
+      getPosition,
+      sizeScale,
+      wrapLongitude,
+      pickable,
+      positionKeyName,
       iconAtlas,
       iconMapping,
     };
@@ -34,10 +42,13 @@ class IconMap extends CompositeLayer {
     const size = viewState ? Math.min(1.5**(viewState.zoom - 10), 1) : 0.1;
 
     const layer = showCluster
-      ? new IconClusterLayer({...layerProps, id: 'icon-cluster'})
+      ? new IconClusterLayer({
+        ...layerProps, 
+        id: `${this.id}-ic-child`,
+      })
       : new IconLayer({
           ...layerProps,
-          id: 'icon-layer',
+          id: `${this.id}-i-child`,
           getIcon: () => 'marker',
           getSize: size,
         });
@@ -54,7 +65,12 @@ IconMap.defaultProps = {
   iconMapping: DEFAULT_ICONMAPPING,
   pickable: true,
   wrapLongitude: true,
-  sizeScale: 60,
+  getPosition: d => d.coordinates,
+  positionKeyName: 'coordinates',
+  sizeScale: {
+    type: 'number',
+    value: 60,
+  },
 };
   
 export default IconMap;

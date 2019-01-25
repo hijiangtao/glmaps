@@ -195,7 +195,13 @@ class FadeScatterplotLayer extends CompositeLayer {
   }
 
   renderLayers() {
-    let {updateTriggers = {}, showWaveAnimation, data, colorRange, ...otherProps} = this.props;
+    let {
+      updateTriggers = {}, 
+      showWaveAnimation, 
+      data, 
+      colorRange, 
+      ...otherProps
+    } = this.props;
     const {radiusScale, maxSpaces, minSpaces, MAX_RADIUSSCALE} = this.state;
     if (showWaveAnimation) {
       otherProps.radiusScale = radiusScale;
@@ -217,6 +223,7 @@ class FadeScatterplotLayer extends CompositeLayer {
 
     const layerProps = {
       ...otherProps,
+      id: `${this.id}-sp-child`,
       data,
       getColor: getQuantizeScale([minSpaces, maxSpaces], newColorRange), // d => [255, (maxSpaces - d.SPACES) / maxSpaces * 140, 0, alpha],
       updateTriggers: {

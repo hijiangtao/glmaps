@@ -107,6 +107,7 @@ class BrushArcLayer extends CompositeLayer {
 
     const layerProps = {
       ...otherProps,
+      id: `${this.id}-aa-child`,
       data,
       getSourcePosition,
       getTargetPosition,

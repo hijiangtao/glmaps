@@ -120,7 +120,7 @@ class AugmentHexagonLayer extends CompositeLayer {
 
     const layerProps = {
       ...otherProps,
-      id: 'hexagon-map',
+      id: `${this.id}-h-child`,
       coverage,
       data,
       colorRange,

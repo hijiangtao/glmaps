@@ -12,9 +12,7 @@ import DeckGL from 'deck.gl';
 
 import {LAYER_CONFIGS, INIT_LAYER} from './examples/configs';
 import {addMapControl} from './examples/tools';
-
-const MAPBOX_TOKEN = '';
-
+import { MAPBOX_TOKEN } from './devconfigs';
 
 const Layers = {
   BrushArcLayer,

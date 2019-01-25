@@ -26,6 +26,7 @@ class PreConfigScreenGridLayer extends CompositeLayer {
     return [
       new ScreenGridLayer({
         ...otherProps,
+        id: `${this.id}-sg-child`,
         data: splitData,
         getPosition,
         getWeight,
