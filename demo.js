@@ -126,6 +126,7 @@ class PaintMap extends PureComponent {
    * @param {*} event 
    */
   addControlHandler = (event) => {
+    console.log(event);
     const map = event && event.target;
     if (map) {
       addMapControl(map);

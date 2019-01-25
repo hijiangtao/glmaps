@@ -55,8 +55,8 @@ function createSceneSubject(scene, paths, flyerGroup) {
     // }
   });
 
-  group.add(curveMesh);
   if (!flyerGroup) group.add(earthMesh);
+  group.add(curveMesh);
   scene.add(group);
   
   return [
@@ -67,7 +67,7 @@ function createSceneSubject(scene, paths, flyerGroup) {
   ]
 }
 
-export default function SceneManager(canvas, data = []) {
+function SceneManagerProto(canvas, data = []) {
   /**
    * Scene
    */
@@ -172,20 +172,14 @@ export default function SceneManager(canvas, data = []) {
     height: canvas.height,
   }
 
-  
   // 入口
-  if (this.scene) {
-    this.updateSceneData(data);
-    return this;
-  } else {
-    this.scene = buildScene();
-    this.renderer = buildRender(screenDimensions);
-    this.camera = buildCamera(screenDimensions);
-    [this.sceneSubject, this.flyerGroup] = createSceneSubject(this.scene, data);
-    this.controller = createController(this.camera, canvas);
-    createSceneGalaxy(this.scene);
-    createLighting(this.scene);
-  }
+  this.scene = buildScene();
+  this.renderer = buildRender(screenDimensions);
+  this.camera = buildCamera(screenDimensions);
+  [this.sceneSubject, this.flyerGroup] = createSceneSubject(this.scene, data);
+  this.controller = createController(this.camera, canvas);
+  createSceneGalaxy(this.scene);
+  createLighting(this.scene);
 
   /**
    * 非创建式数据更新
@@ -193,7 +187,7 @@ export default function SceneManager(canvas, data = []) {
   this.updateSceneData = (newDatasets) => {
     // 删除场景中的旧数据
     const pathsIndex = this.flyerGroup.children.length - 1;
-    this.flyerGroup.remove(this.flyerGroup.children(pathsIndex));
+    this.flyerGroup.remove(this.flyerGroup.children[pathsIndex]);
     // 重新绘制场景中物体
     [this.sceneSubject, this.flyerGroup] = createSceneSubject(this.scene, newDatasets, this.flyerGroup);
   };
@@ -236,3 +230,18 @@ export default function SceneManager(canvas, data = []) {
     this.renderer.setSize(width, height);
   }
 }
+
+function SceneManager() {
+  this.instance = null;
+}
+
+SceneManager.getInstance = function(canvas, data) {
+  if (!this.instance) {
+      this.instance = new SceneManagerProto(canvas, data);
+  } else {
+    this.instance.updateSceneData.call(this.instance, data);
+  }
+  return this.instance;
+};
+
+export default SceneManager;

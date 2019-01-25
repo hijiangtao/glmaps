@@ -46,8 +46,7 @@ let MOCK_DATA = [
  */
 const threeEntryPoint = (id, curveData) => {
   const canvas = document.getElementById(id);
-  const sceneManager = new SceneManager(canvas, curveData);
-  let raf = null;
+  const sceneManager = SceneManager.getInstance(canvas, curveData);
   
   function bindEventListeners() {
     // window.onresize = resizeCanvas;
