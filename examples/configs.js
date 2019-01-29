@@ -56,7 +56,7 @@ const LAYER_CONFIGS = {
       getColorValue: d => d.reduce((accumulator, currentValue) => currentValue ? accumulator + currentValue.SPACES : accumulator, 0),
       opacity: 1,
       pickable: true,
-      radius: 10000,
+      radius: 40000,
       upperPercentile: 100,
       showAnimation: true,
       url: './data/meteorites.json',
@@ -108,18 +108,22 @@ const LAYER_CONFIGS = {
       trips: 'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/trips/trips.json',
       loopLength: 1800, // unit corresponds to the timestamp in source data
       animationSpeed: 30,
-      INITIAL_VIEW_STATE: {
+      INIT_VIEW_STATE: {
         longitude: -74,
         latitude: 40.72,
         zoom: 13,
         maxZoom: 16,
         pitch: 45,
-        bearing: 0,
+        bearing: 0
       }
+    },
+    Globe: {
+      url: 'https://raw.githubusercontent.com/hijiangtao/awesome-toolbox/master/data/GLOBAL_FLIGHTS.json',
+      INIT_VIEW_STATE: {},
     }
   }
   
-  const INIT_LAYER = 'IconLayer';
+  const INIT_LAYER = 'TripLayer';
 
   export {
       INIT_LAYER,

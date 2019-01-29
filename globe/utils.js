@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { geoInterpolate } from 'd3-geo';
+import { geoInterpolate } from 'd3';
 import { GLOBE_RADIUS, CURVE_MIN_ALTITUDE, CURVE_MAX_ALTITUDE } from './constants';
 
 const DEGREE_TO_RADIAN = Math.PI / 180;

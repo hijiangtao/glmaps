@@ -8,17 +8,17 @@ import { GLOBE_RADIUS, CURVE_COLOR, COLOR_SPHERE_NIGHT } from './constants'; // 
 const EARTH_GEOMETRY_MATERIAL = 'https://i.imgur.com/45naBE9.jpg';
 
 /**
- * 地球与飞线
+ * Earth and Lines
  * @param {*} scene 
  */
 function createSceneSubject(scene, paths, flyerGroup) {
-  // 三维物体基类作为容器
+  // 3D Object Container
   const group = flyerGroup || new THREE.Group();
   group.position.z = 0;
   let earthMesh = null;
   
   if (!flyerGroup) {
-    // 地球
+    // Earth
     const geometry = new THREE.SphereGeometry(GLOBE_RADIUS, 40, 30);
     const loader = new THREE.TextureLoader();
     loader.crossOrigin = true;
@@ -33,7 +33,7 @@ function createSceneSubject(scene, paths, flyerGroup) {
     earthMesh.castShadow = true;
   }
 
-  // 飞线
+  // MeshLines
   const material = new THREE.MeshBasicMaterial({
     blending: THREE.AdditiveBlending,
     opacity: 0.6,
@@ -42,7 +42,7 @@ function createSceneSubject(scene, paths, flyerGroup) {
   });
   const curveMesh = new THREE.Mesh();
 
-  paths.forEach((coords) => {
+  paths.forEach((coords, index) => {
     const curve = new Curve(coords, material);
     return curveMesh.add(curve.mesh);
 
@@ -92,7 +92,7 @@ function SceneManagerProto(canvas, data = []) {
   }
 
   /**
-   * 相机
+   * Camera
    * @param {*} param0 
    */
   const buildCamera = ({ width, height }) => {
@@ -109,7 +109,7 @@ function SceneManagerProto(canvas, data = []) {
   }
 
   /**
-   * 星空
+   * Galaxy
    * @param {*} sceneObj 
    */
   const createSceneGalaxy = (sceneObj) => {
@@ -131,7 +131,7 @@ function SceneManagerProto(canvas, data = []) {
   }
 
   /**
-   * 光照
+   * Lighting
    * @param {*} scene 
    */
   const createLighting = (scene) => {  // eslint-disable-line
@@ -172,7 +172,7 @@ function SceneManagerProto(canvas, data = []) {
     height: canvas.height,
   }
 
-  // 入口
+  // Entrance
   this.scene = buildScene();
   this.renderer = buildRender(screenDimensions);
   this.camera = buildCamera(screenDimensions);
@@ -182,18 +182,18 @@ function SceneManagerProto(canvas, data = []) {
   createLighting(this.scene);
 
   /**
-   * 非创建式数据更新
+   * Data update
    */
   this.updateSceneData = (newDatasets) => {
-    // 删除场景中的旧数据
+    // Delete old data
     const pathsIndex = this.flyerGroup.children.length - 1;
     this.flyerGroup.remove(this.flyerGroup.children[pathsIndex]);
-    // 重新绘制场景中物体
+    // Re-construct objects
     [this.sceneSubject, this.flyerGroup] = createSceneSubject(this.scene, newDatasets, this.flyerGroup);
   };
 
   /**
-   * 更新
+   * Frame Update
    */
   this.update = () => {
     this.controller.update();

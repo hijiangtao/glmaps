@@ -34,6 +34,7 @@ export default class TripMap extends CompositeLayer {
   }
 
   shouldUpdateState({changeFlags}) {
+    console.log(changeFlags)
     if (changeFlags.propsChanged || changeFlags.dataChanged || changeFlags.stateChanged) {
       return true;
     }
@@ -54,8 +55,15 @@ export default class TripMap extends CompositeLayer {
   
       this.setState({
         time: ((timestamp % loopTime) / loopTime) * loopLength,
+        raf: window.requestAnimationFrame(_animate),
       });
-      this._animationFrame = window.requestAnimationFrame(_animate); // eslint-disable-line
+    }
+
+    if (changeFlags.propsChanged) {
+      const {raf} = this.state;
+      raf && cancelAnimationFrame(raf);
+
+      _animate();
     }
   }
 
