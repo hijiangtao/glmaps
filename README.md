@@ -1,6 +1,17 @@
 # glmaps
 Earths and maps powered by Three.js and Deck.gl, easy to use
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/c913db53b5a3470f840f5329ea2f54d4)](https://www.codacy.com/app/hijiangtao/glmaps?utm_source=github.com&utm_medium=referral&utm_content=hijiangtao/glmaps&utm_campaign=badger)
+[![npm](https://img.shields.io/npm/v/glmaps.svg)]()
+[![Github All Releases](https://img.shields.io/github/downloads/hijiangtao/glmaps/total.svg)]()
+[![npm](https://img.shields.io/npm/dt/glmaps.svg)]()
+[![GitHub contributors](https://img.shields.io/github/contributors/hijiangtao/glmaps.svg)]() 
+[![GitHub issues](https://img.shields.io/github/issues/hijiangtao/glmaps.svg)]() 
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)]() 
+[![license](https://img.shields.io/github/license/hijiangtao/glmaps.svg)]() 
+
+[![NPM](https://nodei.co/npm/glmaps.png)](https://nodei.co/npm/glmaps/)
+
 ## Install
 
 ```
