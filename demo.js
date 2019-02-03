@@ -1,10 +1,12 @@
-import FadeScatterplotLayer from './layers/ScatterplotLayer';
-import BrushArcLayer from './layers/ArcLayer/animate';
-import AugmentHexagonLayer from './layers/HexagonLayer';
-import ScreenGridLayer from './layers/ScreenGridLayer';
-import IconLayer from './layers/IconLayer';
-import TripLayer from './layers/TripLayer';
-import Globe from './globe/index';
+import {
+  ScatterplotLayer as FadeScatterplotLayer,
+  ScreenGridLayer,
+  IconLayer,
+  HexagonLayer as AugmentHexagonLayer,
+  ArcLayer as BrushArcLayer,
+  Globe,
+  TripLayer,
+} from './src/index';
 
 import React, { PureComponent } from 'react';
 import ReactDOM from "react-dom";
@@ -22,7 +24,7 @@ const Layers = {
   ScreenGridLayer,
   IconLayer,
   Globe,
-  TripLayer, // Issue#2569 need to be solved
+  TripLayer,
 }
 
 /**
@@ -125,8 +127,6 @@ class PaintMap extends PureComponent {
   }
 
   _renderLayers = () => {
-    // if (!this.data) return [];
-
     const {layer} = this.state;
     const Layer = Layers[layer];
 
@@ -138,6 +138,9 @@ class PaintMap extends PureComponent {
     ];
   }
 
+  /**
+   * Menu selection handler
+   */
   onSelectChangeHandler = ({target}) => {
     const layer = target.value;
 
@@ -175,6 +178,8 @@ class PaintMap extends PureComponent {
       <section>
         <h3>glmaps demo</h3>
         <span>Select display layer (default to TripLayer): </span>
+
+        {/* Menu */}
         <select 
           onChange={this.onSelectChangeHandler}
           value={this.state.layer} >
@@ -187,12 +192,16 @@ class PaintMap extends PureComponent {
           <option value="TripLayer">TripLayer</option>
         </select>
 
+        
         <div ref={e => {this.mapElement = e;}} style={{
           position: 'relative',
           marginTop: '2px',
           width: '100%',
           height: '80vh',
         }}>
+          {/* TODO: New Menu */}
+
+          {/* Map or Globe layer */}
           {this.state.layer === 'Globe' ? (
             <Globe data={this.data} />
           ) : (

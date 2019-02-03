@@ -4,6 +4,7 @@ import IconLayer from './layers/IconLayer/index';
 import HexagonLayer from './layers/HexagonLayer/index';
 import ArcLayer from './layers/ArcLayer/animate';
 import Globe from './globe/index';
+import TripLayer from './layers/TripLayer';
 
 export {
   ScatterplotLayer,
@@ -12,4 +13,5 @@ export {
   HexagonLayer,
   ArcLayer,
   Globe,
+  TripLayer,
 }
