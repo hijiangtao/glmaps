@@ -3,9 +3,18 @@ import TrackballControls from 'three-trackballcontrols';
 
 import Curve from './Curve';
 // import Tube from './Tube';
-import { GLOBE_RADIUS, CURVE_COLOR, COLOR_SPHERE_NIGHT } from './constants'; // PI_TWO,
+import { GLOBE_RADIUS, CURVE_COLOR, COLOR_SPHERE_NIGHT, MOON_RADIUS } from './constants'; // PI_TWO,
 
-const EARTH_GEOMETRY_MATERIAL = 'https://i.imgur.com/45naBE9.jpg';
+const EARTH_TEXTURE_PREFIX = 'https://raw.githubusercontent.com/hijiangtao/awesome-toolbox/master/assets/';
+const EARTH_DIFFUSE_TEXTURE = `${EARTH_TEXTURE_PREFIX}EARTH_DIFFUSE_TEXTURE.jpg`;
+const EARTH_BUMP_TEXTURE = `${EARTH_TEXTURE_PREFIX}EARTH_BUMP_TEXTURE.jpg`;
+const MOON_DIFFUSE_TEXTURE = `${EARTH_TEXTURE_PREFIX}MOON_DIFFUSE_TEXTURE.jpg`;
+const MOON_BUMP_TEXTURE = `${EARTH_TEXTURE_PREFIX}MOON_BUMP_TEXTURE.jpg`;
+const EARTH_SPECULAR_TEXTURE = `${EARTH_TEXTURE_PREFIX}EARTH_SPECULAR_TEXTURE.jpg`;
+const STAR_FIELD_TEXTURE = `${EARTH_TEXTURE_PREFIX}STAR_FIELD.png`;
+
+const EARTH_EQUATORIAL_ROTATION_VELOCITY = (4651 * 0.001); // km/s
+const EARTH_RADIUS = 6371; // km
 
 /**
  * Earth and Lines
@@ -16,21 +25,51 @@ function createSceneSubject(scene, paths, flyerGroup) {
   const group = flyerGroup || new THREE.Group();
   group.position.z = 0;
   let earthMesh = null;
-  
+  let moonMesh = null;
+
   if (!flyerGroup) {
     // Earth
-    const geometry = new THREE.SphereGeometry(GLOBE_RADIUS, 40, 30);
+    const geometry = new THREE.SphereGeometry(GLOBE_RADIUS, 32, 32);
     const loader = new THREE.TextureLoader();
     loader.crossOrigin = true;
     const sphereMaterial = new THREE.MeshPhongMaterial({
-      map: loader.load(EARTH_GEOMETRY_MATERIAL),
-      bumpMap: loader.load(EARTH_GEOMETRY_MATERIAL),
-      bumpScale: 0.05,
-      color: COLOR_SPHERE_NIGHT,
+      // Diffuse Texture
+      map: loader.load(EARTH_DIFFUSE_TEXTURE),
+
+      // Bump Texture
+      bumpMap: loader.load(EARTH_BUMP_TEXTURE),
+      bumpScale: 1,
+
+      // Specular Texture
+      specularMap: loader.load(EARTH_SPECULAR_TEXTURE),
+      specular: new THREE.Color('grey'),
+
+      // color: COLOR_SPHERE_NIGHT,
     });
     earthMesh = new THREE.Mesh(geometry, sphereMaterial);
+    earthMesh.position.x = 0;
+    earthMesh.position.y = 0;
+    earthMesh.position.z = 0;
     earthMesh.receiveShadow = true;
     earthMesh.castShadow = true;
+
+    // moon
+    const MOON_EQUATORIAL_ROTATION_VELOCITY = (4.627 * 0.001); // km/s
+
+    const moongeometry = new THREE.SphereGeometry(MOON_RADIUS, 32, 32);
+    const moonmaterial = new THREE.MeshPhongMaterial({
+      // Diffuse Texture
+      map: loader.load(MOON_DIFFUSE_TEXTURE),
+
+      // Bump Texture
+      bumpMap: loader.load(MOON_BUMP_TEXTURE),
+      bumpScale: 1,
+    });
+    moonMesh = new THREE.Mesh(moongeometry, moonmaterial);
+
+    moonMesh.position.x = earthMesh.position.x;
+    moonMesh.position.y = earthMesh.position.y + GLOBE_RADIUS * 1.5;
+    moonMesh.position.z = earthMesh.position.z + GLOBE_RADIUS * 1.5;
   }
 
   // MeshLines
@@ -55,13 +94,16 @@ function createSceneSubject(scene, paths, flyerGroup) {
     // }
   });
 
-  if (!flyerGroup) group.add(earthMesh);
+  if (!flyerGroup) {
+    group.add(earthMesh);
+    group.add(moonMesh);
+  }
   group.add(curveMesh);
   scene.add(group);
-  
+
   return [
     {
-      update: () => {},
+      update: () => { },
     },
     group,
   ]
@@ -81,7 +123,7 @@ function SceneManagerProto(canvas, data = []) {
     const currentRenderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     const DPR = window.devicePixelRatio || 1;
 
-    currentRenderer.setClearColor( 0xFFC900 );
+    currentRenderer.setClearColor(0xFFC900);
     currentRenderer.setPixelRatio(DPR);
     currentRenderer.setSize(width, height);
 
@@ -103,7 +145,7 @@ function SceneManagerProto(canvas, data = []) {
     const currentCamera = new THREE.PerspectiveCamera(fieldOfView, aspectRatio, nearPlane, farPlane);
 
     currentCamera.position.z = 800;
-    currentCamera.lookAt(new THREE.Vector3(0,0,0))
+    currentCamera.lookAt(new THREE.Vector3(0, 0, 0))
 
     return currentCamera;
   }
@@ -123,7 +165,7 @@ function SceneManagerProto(canvas, data = []) {
     // Load Galaxy Textures
     const galaxyMaterial = new THREE.MeshBasicMaterial({
       side: THREE.BackSide,
-      map: loader.load('https://s3-us-west-2.amazonaws.com/s.cdpn.io/141228/starfield.png'),
+      map: loader.load(STAR_FIELD_TEXTURE), // Diffuse Texture
     });
     const galaxy = new THREE.Mesh(galaxyGeometry, galaxyMaterial);
 
@@ -132,17 +174,24 @@ function SceneManagerProto(canvas, data = []) {
 
   /**
    * Lighting
-   * @param {*} scene 
+   * @param {*} sceneObj 
    */
-  const createLighting = (scene) => {  // eslint-disable-line
-    // lighting
-    const light = new THREE.HemisphereLight(0xffffff, 0xffffff, 3); // eslint-disable-line
-    scene.add(light);
+  const createLighting = (sceneObj) => {  // eslint-disable-line
+    // A light source positioned directly above the scene, with color fading from the sky color to the ground color. 
+    // const light = new THREE.HemisphereLight(0xffffff, 0xffffff, 3); // eslint-disable-line
+    // sceneObj.add(light);
 
-    const pointLight = new THREE.SpotLight(0xffffff, 1, 1000, 10, 2);
-    scene.add(pointLight);
+    // A light that gets emitted from a single point in all directions.
+    // const pointLight = new THREE.SpotLight(0xffffff, 1, 1000, 10, 2);
+    // sceneObj.add(pointLight);
 
-    scene.add(new THREE.AmbientLight(0x333333));
+    // DirectionalLight
+    const directionalLight = new THREE.DirectionalLight(0xcccccc, 0.6); // color, intensity
+    directionalLight.position.set(20, 20, 20);
+    sceneObj.add(directionalLight);
+
+    // This light globally illuminates all objects in the scene equally.
+    sceneObj.add(new THREE.AmbientLight(0x888888));
   }
 
   /**
@@ -200,7 +249,7 @@ function SceneManagerProto(canvas, data = []) {
     this.sceneSubject.update();
 
     // renderer.render(scene, camera);
-    const {x, z} = this.camera.position;
+    const { x, z } = this.camera.position;
 
     // zoom
     // camera.position.z = _cameraZ;
@@ -235,9 +284,9 @@ function SceneManager() {
   this.instance = null;
 }
 
-SceneManager.getInstance = function(canvas, data) {
+SceneManager.getInstance = function (canvas, data) {
   if (!this.instance) {
-      this.instance = new SceneManagerProto(canvas, data);
+    this.instance = new SceneManagerProto(canvas, data);
   } else {
     this.instance.updateSceneData.call(this.instance, data);
   }

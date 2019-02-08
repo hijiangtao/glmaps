@@ -123,7 +123,7 @@ const LAYER_CONFIGS = {
     }
   }
   
-  const INIT_LAYER = 'TripLayer';
+  const INIT_LAYER = 'Globe';
 
   export {
       INIT_LAYER,

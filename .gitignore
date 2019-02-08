@@ -62,3 +62,6 @@ typings/
 
 # dev files
 devconfigs.js
+
+# dist folder
+dist
