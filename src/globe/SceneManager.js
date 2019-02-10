@@ -6,7 +6,7 @@ import Curve from './Curve';
 import { GLOBE_RADIUS, CURVE_COLOR, COLOR_SPHERE_NIGHT, MOON_RADIUS } from './constants'; // PI_TWO,
 
 const EARTH_TEXTURE_PREFIX = 'https://raw.githubusercontent.com/hijiangtao/awesome-toolbox/master/assets/';
-const EARTH_DIFFUSE_TEXTURE = `${EARTH_TEXTURE_PREFIX}EARTH_DIFFUSE_TEXTURE.jpg`;
+const EARTH_DIFFUSE_TEXTURE = `${EARTH_TEXTURE_PREFIX}EARTH_DIFFUSE_NATURAL_TEXTURE.jpg`; // `${EARTH_TEXTURE_PREFIX}EARTH_DIFFUSE_TEXTURE.jpg`;
 const EARTH_BUMP_TEXTURE = `${EARTH_TEXTURE_PREFIX}EARTH_BUMP_TEXTURE.jpg`;
 const MOON_DIFFUSE_TEXTURE = `${EARTH_TEXTURE_PREFIX}MOON_DIFFUSE_TEXTURE.jpg`;
 const MOON_BUMP_TEXTURE = `${EARTH_TEXTURE_PREFIX}MOON_BUMP_TEXTURE.jpg`;
@@ -38,7 +38,7 @@ function createSceneSubject(scene, paths, flyerGroup) {
 
       // Bump Texture
       bumpMap: loader.load(EARTH_BUMP_TEXTURE),
-      bumpScale: 1,
+      bumpScale: 0.05,
 
       // Specular Texture
       specularMap: loader.load(EARTH_SPECULAR_TEXTURE),
@@ -187,7 +187,7 @@ function SceneManagerProto(canvas, data = []) {
 
     // DirectionalLight
     const directionalLight = new THREE.DirectionalLight(0xcccccc, 0.6); // color, intensity
-    directionalLight.position.set(20, 20, 20);
+    directionalLight.position.set(10, 6, 10);
     sceneObj.add(directionalLight);
 
     // This light globally illuminates all objects in the scene equally.
@@ -202,7 +202,7 @@ function SceneManagerProto(canvas, data = []) {
   const createController = (cameraSight, container) => {
     const controls = new TrackballControls(cameraSight, container);
     controls.rotateSpeed = 2;
-    controls.zoomSpeed = 0.4;
+    controls.zoomSpeed = 2;
     controls.panSpeed = 8;
     controls.noZoom = false;
     controls.noPan = false;
