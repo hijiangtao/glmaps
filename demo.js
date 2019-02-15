@@ -11,7 +11,7 @@ import {
 import React, { PureComponent } from 'react';
 import ReactDOM from "react-dom";
 import {StaticMap} from 'react-map-gl';
-import DeckGL from 'deck.gl';
+import DeckGL, {FlyToInterpolator} from 'deck.gl';
 
 import {LAYER_CONFIGS, INIT_LAYER} from './examples/configs';
 import {addMapControl} from './examples/tools';
@@ -102,6 +102,7 @@ class PaintMap extends PureComponent {
   state = {
     layer: INIT_LAYER,
     refresh: false,
+    viewState: LAYER_CONFIGS[INIT_LAYER].INIT_VIEW_STATE,
   }
 
   componentDidMount() {
@@ -114,14 +115,14 @@ class PaintMap extends PureComponent {
     this.mapElement.removeEventListener('mousewheel', evt => evt.preventDefault());
   }
 
-  toggleRefresh = ({res = [], layer}) => {
+  toggleRefresh = ({res = [], ...otherProps}) => {
     this.data = res;
 
     this.setState((prevState) => {
       return {
         ...prevState,
         refresh: !prevState.refresh,
-        layer,
+        ...otherProps
       }
     });
   }
@@ -138,6 +139,10 @@ class PaintMap extends PureComponent {
     ];
   }
 
+  _onViewStateChange = ({viewState}) => {
+    this.setState({viewState});
+  }
+
   /**
    * Menu selection handler
    */
@@ -149,7 +154,18 @@ class PaintMap extends PureComponent {
       url: LAYER_CONFIGS[layer].url,
     })
     .then((res) => {
-      this.toggleRefresh({res, layer});
+      // this.deckglIns && this.deckglIns.setProps({
+      //   viewState: LAYER_CONFIGS[layer].INIT_VIEW_STATE
+      // })
+      this.toggleRefresh({
+        res, 
+        layer,
+        viewState: {
+          ...LAYER_CONFIGS[layer].INIT_VIEW_STATE,
+          transitionInterpolator: new FlyToInterpolator(),
+          transitionDuration: 5000
+        }
+      });
     })
     .catch(err => console.log(err));
   }
@@ -172,7 +188,8 @@ class PaintMap extends PureComponent {
     } = this.props;
 
     const {layer} = this.state;
-    const initialViewState = LAYER_CONFIGS[layer].INIT_VIEW_STATE;
+    const {viewState} = this.state;
+    // const initialViewState = LAYER_CONFIGS[layer].INIT_VIEW_STATE;
 
     return (
       <section>
@@ -206,17 +223,20 @@ class PaintMap extends PureComponent {
             <Globe data={this.data} />
           ) : (
             <DeckGL
+              ref={e => this.deckglIns = e}
               width="100%" 
               height="90%" 
               layers={this._renderLayers()}
-              initialViewState={initialViewState}
+              // initialViewState={initialViewState}
+              viewState={viewState}
+              onViewStateChange={this._onViewStateChange}
               controller={controller}
             >
               {baseMap && (
                 <StaticMap
                   onLoad={this.addControlHandler}
                   ref={e => this.staticMap = e}
-                  reuseMaps
+                  // reuseMaps
                   mapStyle="mapbox://styles/mapbox/dark-v9"
                   preventStyleDiffing
                   mapboxApiAccessToken={MAPBOX_TOKEN}
