@@ -21,7 +21,7 @@ export default function Curve(coords, material) {
   // !!!
   // You can use setDrawRange to animate the curve
   this.curveGeometry.addAttribute('position', new THREE.BufferAttribute(points, 3));
-  this.curveGeometry.setDrawRange(0, CURVE_SEGMENTS);
+  this.curveGeometry.setDrawRange(0, CURVE_SEGMENTS / 7);
 
   this.mesh = new THREE.Line(this.curveGeometry, material);
 }

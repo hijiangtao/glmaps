@@ -5,9 +5,9 @@ import SceneManager from './SceneManager';
  * Three Instance Entrance Point
  * @param {*} containerElement 
  */
-const threeEntryPoint = ({id, data, animate}) => {
+const threeEntryPoint = ({id, ...otherProps}) => {
   const canvas = document.getElementById(id);
-  const sceneManager = SceneManager.getInstance(canvas, {data, animate});
+  const sceneManager = SceneManager.getInstance(canvas, otherProps);
   let raf = null;
   
   function bindEventListeners() {
@@ -39,11 +39,20 @@ const threeEntryPoint = ({id, data, animate}) => {
  */
 const ThreeCube = (props) => {
   useEffect(() => {
-    const {data = [], animate = true} = props;
+    const {
+      data = [], 
+      animate = true, 
+      id = 'canvasGlobe',
+      visType = 'point',
+      moon = true
+    } = props;
+    
     const [canvas, raf, resizeFunc] = threeEntryPoint({
-      id: 'canvasGlobe',
+      id,
       data,
       animate,
+      visType, // 'cube', curve', 'point'
+      moon,
     });
 
     return () => {

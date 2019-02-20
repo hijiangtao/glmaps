@@ -42,6 +42,11 @@ export function getSplineFromCoords(coords) {
   };
 }
 
+export const getCubeCoordsFromLatLng = ({lat, lng}) => {
+  // cube vertices
+  return coordinateToPosition(lat, lng, GLOBE_RADIUS);
+}
+
 export const getColor = (index) => {
   const color = new THREE.Color();
   color.setHSL((255 * (index * 0.001)), 1.0, 0.5);

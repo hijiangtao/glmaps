@@ -189,6 +189,7 @@ class PaintMap extends PureComponent {
 
     const {layer} = this.state;
     const {viewState} = this.state;
+    const compProps = LAYER_CONFIGS[layer].PROPS;
     // const initialViewState = LAYER_CONFIGS[layer].INIT_VIEW_STATE;
 
     return (

@@ -2,10 +2,12 @@ import * as THREE from 'three';
 import TrackballControls from 'three-trackballcontrols';
 
 import Curve from './Curve';
+import CubeMesh from './CubeMesh';
 // import Tube from './Tube';
-import { GLOBE_RADIUS, CURVE_COLOR, COLOR_SPHERE_NIGHT, MOON_RADIUS, CURVE_SEGMENTS } from './constants'; // PI_TWO,
+import { GLOBE_RADIUS, CURVE_COLOR, COLOR_SPHERE_NIGHT, MOON_RADIUS, CURVE_SEGMENTS, POINT_SEGMENTS } from './constants'; // PI_TWO,
 import { getColor } from './utils';
 
+// TODO: constants
 const EARTH_TEXTURE_PREFIX = 'https://raw.githubusercontent.com/hijiangtao/awesome-toolbox/master/assets/';
 const EARTH_DIFFUSE_TEXTURE = `${EARTH_TEXTURE_PREFIX}EARTH_DIFFUSE_NATURAL_TEXTURE.jpg`; // `${EARTH_TEXTURE_PREFIX}EARTH_DIFFUSE_TEXTURE.jpg`;
 const EARTH_BUMP_TEXTURE = `${EARTH_TEXTURE_PREFIX}EARTH_BUMP_TEXTURE.jpg`;
@@ -16,12 +18,17 @@ const STAR_FIELD_TEXTURE = `${EARTH_TEXTURE_PREFIX}STAR_FIELD.png`;
 
 const EARTH_EQUATORIAL_ROTATION_VELOCITY = (4651 * 0.001); // km/s
 const EARTH_RADIUS = 6371; // km
+const MOON_EQUATORIAL_ROTATION_VELOCITY = (4.627 * 0.001); // km/s
 
 /**
  * Earth and Lines
  * @param {*} scene 
+ * @param {*} dataCollection 
+ * @param {*} flyerGroup 
  */
-function createSceneSubject(scene, paths, flyerGroup) {
+function createSceneSubject(scene, dataCollection, flyerGroup) {
+  const {data: visData, visType, moon} = dataCollection;
+
   // 3D Object Container
   const group = flyerGroup || new THREE.Group();
   group.position.z = 0;
@@ -42,8 +49,8 @@ function createSceneSubject(scene, paths, flyerGroup) {
       bumpScale: 0.05,
 
       // Specular Texture
-      specularMap: loader.load(EARTH_SPECULAR_TEXTURE),
-      specular: new THREE.Color('grey'),
+      // specularMap: loader.load(EARTH_SPECULAR_TEXTURE),
+      // specular: new THREE.Color('grey'),
 
       // color: COLOR_SPHERE_NIGHT,
     });
@@ -55,8 +62,6 @@ function createSceneSubject(scene, paths, flyerGroup) {
     earthMesh.castShadow = true;
 
     // moon
-    const MOON_EQUATORIAL_ROTATION_VELOCITY = (4.627 * 0.001); // km/s
-
     const moongeometry = new THREE.SphereGeometry(MOON_RADIUS, 32, 32);
     const moonmaterial = new THREE.MeshPhongMaterial({
       // Diffuse Texture
@@ -80,27 +85,36 @@ function createSceneSubject(scene, paths, flyerGroup) {
     transparent: true,
     color: getColor(4),
   });
-  const curveMesh = new THREE.Mesh();
-  // pathGeometry Collection
-  const pathGeometry = [];
+  let curveMesh = new THREE.Mesh();
 
-  paths.forEach((coords, index) => {
-    const curve = new Curve(coords, material);
-    pathGeometry.push(curve.curveGeometry);
-    return curveMesh.add(curve.mesh);
+  // TODO: unify the approach of instance creating, rather than Curve and CubeMesh.
+  if (visType === 'curve') {
+    visData.forEach((coords, index) => {
+      const item = new Curve(coords, material);
 
-    // if (index % 2) {
-    //   const curve = new Curve(coords, material);
-    //   curveMesh.add(curve.mesh);
-    // } else {
-    //   const tube = new Tube(coords, material);
-    //   curveMesh.add(tube.mesh);
-    // }
-  });
+      return curveMesh.add(item.mesh);
+  
+      // if (index % 2) {
+      //   const curve = new Curve(coords, material);
+      //   curveMesh.add(curve.mesh);
+      // } else {
+      //   const tube = new Tube(coords, material);
+      //   curveMesh.add(tube.mesh);
+      // }
+    });
+  } else if (visType === 'cube') {
+    const item = new CubeMesh(visData);
+    curveMesh = item.cubemesh;
+  }
+  
 
   if (!flyerGroup) {
     group.add(earthMesh);
-    group.add(moonMesh);
+    
+    // TODO: Display of moon should update dynamically according to pass-in props
+    if (moon) {
+      group.add(moonMesh);
+    }
   }
   group.add(curveMesh);
   scene.add(group);
@@ -108,14 +122,10 @@ function createSceneSubject(scene, paths, flyerGroup) {
   return [
     {
       update: (index) => {
-        // pathGeometry.forEach((path) => {
-        //   path.setDrawRange(index, 20);
-        //   path.attributes.position.needsUpdate = true;
-        // })
+        if (visType !== 'curve') return ;
         
-        console.log(index)
         curveMesh.children.forEach((path) => {
-          path.geometry.setDrawRange(index, 20);
+          path.geometry.setDrawRange(index, CURVE_SEGMENTS / 7);
           path.geometry.attributes.position.needsUpdate = true;
         })
       },
@@ -124,7 +134,7 @@ function createSceneSubject(scene, paths, flyerGroup) {
   ]
 }
 
-function SceneManagerProto(canvas, {data = [], animate}) {
+function SceneManagerProto(canvas, {data = [], animate, visType, moon}) {
   /**
    * Scene
    */
@@ -240,13 +250,14 @@ function SceneManagerProto(canvas, {data = [], animate}) {
   this.scene = buildScene();
   this.renderer = buildRender(screenDimensions);
   this.camera = buildCamera(screenDimensions);
-  [this.sceneSubject, this.flyerGroup] = createSceneSubject(this.scene, data);
+  [this.sceneSubject, this.flyerGroup] = createSceneSubject(this.scene, {data, visType, moon});
   this.controller = createController(this.camera, canvas);
 
   // Props init
   this.props = {
     animate,
     curveSegmentIndex: 0,
+    pointSegmentIndex: 0,
   }
 
   createSceneGalaxy(this.scene);
@@ -255,34 +266,41 @@ function SceneManagerProto(canvas, {data = [], animate}) {
   /**
    * Data update
    */
-  this.updateSceneData = ({data: newDatasets, animate}) => {
+  this.updateSceneData = ({data, animate, visType, moon}) => {
     // console.log(newDatasets)
 
     // Delete old data
     const pathsIndex = this.flyerGroup.children.length - 1;
     this.flyerGroup.remove(this.flyerGroup.children[pathsIndex]);
     // Re-construct objects
-    [this.sceneSubject, this.flyerGroup] = createSceneSubject(this.scene, newDatasets, this.flyerGroup);
+    [this.sceneSubject, this.flyerGroup] = createSceneSubject(this.scene, {
+      data,
+      visType,
+      moon,
+    }, this.flyerGroup);
   };
 
   /**
    * Update props
    */
   this.propsUpdate = () => {
-    let {animate, curveSegmentIndex} = this.props;
+    let { curveSegmentIndex, pointSegmentIndex } = this.props;
     this.props.curveSegmentIndex = (curveSegmentIndex > CURVE_SEGMENTS) ? 0 : curveSegmentIndex + 1;
+    this.props.pointSegmentIndex = (pointSegmentIndex > POINT_SEGMENTS) ? 0 : pointSegmentIndex + 1;
   }
 
   /**
    * Frame Update
    */
   this.update = () => {
-    console.log('update')
     this.controller.update();
     this.propsUpdate();
-    this.sceneSubject.update(this.props.curveSegmentIndex);
+    
+    // animation update
+    if (this.props.animate) {
+      this.sceneSubject.update(this.props.curveSegmentIndex);
+    }
 
-    // renderer.render(scene, camera);
     const { x, z } = this.camera.position;
 
     // zoom
@@ -318,11 +336,11 @@ function SceneManager() {
   this.instance = null;
 }
 
-SceneManager.getInstance = function (canvas, {data, animate}) {
+SceneManager.getInstance = function (canvas, otherProps) {
   if (!this.instance) {
-    this.instance = new SceneManagerProto(canvas, {data, animate});
+    this.instance = new SceneManagerProto(canvas, otherProps);
   } else {
-    this.instance.updateSceneData.call(this.instance, {data, animate});
+    this.instance.updateSceneData.call(this.instance, otherProps);
   }
   return this.instance;
 };
