@@ -3,6 +3,7 @@ import TrackballControls from 'three-trackballcontrols';
 
 import Curve from './Curve';
 import CubeMesh from './CubeMesh';
+import Mover from './Mover';
 // import Tube from './Tube';
 import { GLOBE_RADIUS, CURVE_COLOR, COLOR_SPHERE_NIGHT, MOON_RADIUS, CURVE_SEGMENTS, POINT_SEGMENTS } from './constants'; // PI_TWO,
 import { getColor } from './utils';
@@ -86,11 +87,13 @@ function createSceneSubject(scene, dataCollection, flyerGroup) {
     color: getColor(4),
   });
   let curveMesh = new THREE.Mesh();
+  const instanceCollection = [];
 
   // TODO: unify the approach of instance creating, rather than Curve and CubeMesh.
   if (visType === 'curve') {
     visData.forEach((coords, index) => {
       const item = new Curve(coords, material);
+      instanceCollection.push(item);
 
       return curveMesh.add(item.mesh);
   
@@ -105,6 +108,13 @@ function createSceneSubject(scene, dataCollection, flyerGroup) {
   } else if (visType === 'cube') {
     const item = new CubeMesh(visData);
     curveMesh = item.cubemesh;
+  } else if (visType === 'point') {
+    visData.forEach((coords, index) => {
+      const item = new Mover(coords);
+      instanceCollection.push(item);
+
+      return curveMesh.add(item.mesh);
+    });
   }
   
 
@@ -122,12 +132,19 @@ function createSceneSubject(scene, dataCollection, flyerGroup) {
   return [
     {
       update: (index) => {
-        if (visType !== 'curve') return ;
-        
-        curveMesh.children.forEach((path) => {
-          path.geometry.setDrawRange(index, CURVE_SEGMENTS / 7);
-          path.geometry.attributes.position.needsUpdate = true;
-        })
+        switch (visType) {
+          case 'curve':
+            curveMesh.children.forEach((path) => {
+              path.geometry.setDrawRange(index, CURVE_SEGMENTS / 7);
+              path.geometry.attributes.position.needsUpdate = true;
+            })   
+            break;
+          case 'point':
+            instanceCollection.forEach((point) => point.update(index));
+            break;
+          default:
+            break;
+        }
       },
     },
     group,
@@ -256,6 +273,7 @@ function SceneManagerProto(canvas, {data = [], animate, visType, moon}) {
   // Props init
   this.props = {
     animate,
+    visType,
     curveSegmentIndex: 0,
     pointSegmentIndex: 0,
   }
@@ -298,7 +316,8 @@ function SceneManagerProto(canvas, {data = [], animate, visType, moon}) {
     
     // animation update
     if (this.props.animate) {
-      this.sceneSubject.update(this.props.curveSegmentIndex);
+      const segIndex = this.props.visType === 'point' ? this.props.pointSegmentIndex : this.props.curveSegmentIndex;
+      this.sceneSubject.update(segIndex);
     }
 
     const { x, z } = this.camera.position;

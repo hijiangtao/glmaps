@@ -61,7 +61,7 @@ const fetchData = ({type = 'BrushArcLayer', url = './data/counties.json'}) => ne
       fetch(url)
       .then(res => res.json())
       .then(res => {
-        const routes = res.routes.slice(0, 8000);
+        const routes = res.routes.slice(0, 100);
         const {airports} = res;
         return routes.map(route => {
           const startAirport = airports[route[1]];

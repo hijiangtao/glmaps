@@ -14,4 +14,4 @@ export const CURVE_COLOR = 0xe43c59;
 
 export const COLOR_SPHERE_NIGHT = 0xffffff;
 
-export const POINT_SEGMENTS = 200;
+export const POINT_SEGMENTS = 400;
