@@ -3,7 +3,8 @@ import TrackballControls from 'three-trackballcontrols';
 
 import Curve from './Curve';
 // import Tube from './Tube';
-import { GLOBE_RADIUS, CURVE_COLOR, COLOR_SPHERE_NIGHT, MOON_RADIUS } from './constants'; // PI_TWO,
+import { GLOBE_RADIUS, CURVE_COLOR, COLOR_SPHERE_NIGHT, MOON_RADIUS, CURVE_SEGMENTS } from './constants'; // PI_TWO,
+import { getColor } from './utils';
 
 const EARTH_TEXTURE_PREFIX = 'https://raw.githubusercontent.com/hijiangtao/awesome-toolbox/master/assets/';
 const EARTH_DIFFUSE_TEXTURE = `${EARTH_TEXTURE_PREFIX}EARTH_DIFFUSE_NATURAL_TEXTURE.jpg`; // `${EARTH_TEXTURE_PREFIX}EARTH_DIFFUSE_TEXTURE.jpg`;
@@ -77,12 +78,15 @@ function createSceneSubject(scene, paths, flyerGroup) {
     blending: THREE.AdditiveBlending,
     opacity: 0.6,
     transparent: true,
-    color: CURVE_COLOR,
+    color: getColor(4),
   });
   const curveMesh = new THREE.Mesh();
+  // pathGeometry Collection
+  const pathGeometry = [];
 
   paths.forEach((coords, index) => {
     const curve = new Curve(coords, material);
+    pathGeometry.push(curve.curveGeometry);
     return curveMesh.add(curve.mesh);
 
     // if (index % 2) {
@@ -103,13 +107,24 @@ function createSceneSubject(scene, paths, flyerGroup) {
 
   return [
     {
-      update: () => { },
+      update: (index) => {
+        // pathGeometry.forEach((path) => {
+        //   path.setDrawRange(index, 20);
+        //   path.attributes.position.needsUpdate = true;
+        // })
+        
+        console.log(index)
+        curveMesh.children.forEach((path) => {
+          path.geometry.setDrawRange(index, 20);
+          path.geometry.attributes.position.needsUpdate = true;
+        })
+      },
     },
     group,
   ]
 }
 
-function SceneManagerProto(canvas, data = []) {
+function SceneManagerProto(canvas, {data = [], animate}) {
   /**
    * Scene
    */
@@ -186,7 +201,7 @@ function SceneManagerProto(canvas, data = []) {
     // sceneObj.add(pointLight);
 
     // DirectionalLight
-    const directionalLight = new THREE.DirectionalLight(0xcccccc, 0.6); // color, intensity
+    const directionalLight = new THREE.DirectionalLight(0xcccccc, 0.3); // color, intensity
     directionalLight.position.set(10, 6, 10);
     sceneObj.add(directionalLight);
 
@@ -227,13 +242,22 @@ function SceneManagerProto(canvas, data = []) {
   this.camera = buildCamera(screenDimensions);
   [this.sceneSubject, this.flyerGroup] = createSceneSubject(this.scene, data);
   this.controller = createController(this.camera, canvas);
+
+  // Props init
+  this.props = {
+    animate,
+    curveSegmentIndex: 0,
+  }
+
   createSceneGalaxy(this.scene);
   createLighting(this.scene);
 
   /**
    * Data update
    */
-  this.updateSceneData = (newDatasets) => {
+  this.updateSceneData = ({data: newDatasets, animate}) => {
+    // console.log(newDatasets)
+
     // Delete old data
     const pathsIndex = this.flyerGroup.children.length - 1;
     this.flyerGroup.remove(this.flyerGroup.children[pathsIndex]);
@@ -242,11 +266,21 @@ function SceneManagerProto(canvas, data = []) {
   };
 
   /**
+   * Update props
+   */
+  this.propsUpdate = () => {
+    let {animate, curveSegmentIndex} = this.props;
+    this.props.curveSegmentIndex = (curveSegmentIndex > CURVE_SEGMENTS) ? 0 : curveSegmentIndex + 1;
+  }
+
+  /**
    * Frame Update
    */
   this.update = () => {
+    console.log('update')
     this.controller.update();
-    this.sceneSubject.update();
+    this.propsUpdate();
+    this.sceneSubject.update(this.props.curveSegmentIndex);
 
     // renderer.render(scene, camera);
     const { x, z } = this.camera.position;
@@ -284,11 +318,11 @@ function SceneManager() {
   this.instance = null;
 }
 
-SceneManager.getInstance = function (canvas, data) {
+SceneManager.getInstance = function (canvas, {data, animate}) {
   if (!this.instance) {
-    this.instance = new SceneManagerProto(canvas, data);
+    this.instance = new SceneManagerProto(canvas, {data, animate});
   } else {
-    this.instance.updateSceneData.call(this.instance, data);
+    this.instance.updateSceneData.call(this.instance, {data, animate});
   }
   return this.instance;
 };

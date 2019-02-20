@@ -42,4 +42,9 @@ export function getSplineFromCoords(coords) {
   };
 }
 
+export const getColor = (index) => {
+  const color = new THREE.Color();
+  color.setHSL((255 * (index * 0.001)), 1.0, 0.5);
+  return color;
+};
 
