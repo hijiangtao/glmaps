@@ -5,7 +5,7 @@ const LAYER_CONFIGS = {
       getTargetPosition: d => d.target, 
       showBrushAnimation: true,
       speed: 0.005,
-      url: './data/counties.json',
+      url: '../data/counties.json',
       INIT_VIEW_STATE: {
         longitude: -104.96,
         latitude: 40.66033,
@@ -26,7 +26,7 @@ const LAYER_CONFIGS = {
       getPosition: d => d.COORDINATES,
       getRadius: () => 14000,
       showWaveAnimation: true,
-      url: './data/meteorites.json',
+      url: '../data/meteorites.json',
       INIT_VIEW_STATE: {
         longitude: -104.96,
         latitude: 40.66033,
@@ -59,7 +59,7 @@ const LAYER_CONFIGS = {
       radius: 40000,
       upperPercentile: 100,
       showAnimation: true,
-      url: './data/meteorites.json',
+      url: '../data/meteorites.json',
       INIT_VIEW_STATE: {
         longitude: -104.96,
         latitude: 40.66033,
@@ -78,7 +78,7 @@ const LAYER_CONFIGS = {
       extruded: true,
       gpuAggregation: true,
       pickable: true,
-      url: './data/meteorites.json',
+      url: '../data/meteorites.json',
       INIT_VIEW_STATE: {
         longitude: -104.96,
         latitude: 40.66033,
@@ -91,7 +91,7 @@ const LAYER_CONFIGS = {
     },
     IconLayer: {
       id: 'icon-layer',
-      url: './data/meteorites.json',
+      url: '../data/meteorites.json',
       showCluster: true,
       INIT_VIEW_STATE: {
         longitude: -104.96,
@@ -123,7 +123,7 @@ const LAYER_CONFIGS = {
     }
   }
   
-  const INIT_LAYER = 'Globe';
+  const INIT_LAYER = 'TripLayer';
 
   export {
       INIT_LAYER,
