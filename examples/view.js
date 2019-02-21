@@ -145,8 +145,6 @@ const useInit = () => {
           url: LAYER_CONFIGS[newLayer].url,
         });
 
-        // console.log(result)
-        // TODO: Uncaught Error: failed to invert matrix
         setData(result);
         setViewState({
           ...LAYER_CONFIGS[newLayer].INIT_VIEW_STATE,
@@ -158,6 +156,8 @@ const useInit = () => {
     }
   }
 
+  const handleViewStateChange = ({viewState}) => setViewState(viewState);
+
   /**
    * Menu selection handler
    */
@@ -165,7 +165,9 @@ const useInit = () => {
     // fetch data
     fetchUpdateDataset(layer);
 
-    return () => {};
+    return () => {
+      setData([]);
+    };
   }, [layer]);
 
   const addControlHandler = (event) => {
@@ -175,7 +177,7 @@ const useInit = () => {
     }
   };
 
-  return [layer, data, viewState, setViewState, mapEl, addControlHandler];
+  return [layer, data, viewState, handleViewStateChange, mapEl, addControlHandler];
 }
 
 const PaintMap = (props) => {
@@ -183,7 +185,7 @@ const PaintMap = (props) => {
     controller = true, 
     baseMap = true,
   } = props;
-  const [layer, data, viewState, setViewState, mapEl, addControlHandler] = useInit();
+  const [layer, data, viewState, handleViewStateChange, mapEl, addControlHandler] = useInit();
 
   const Layer = Layers[layer];
   const renderLayers = () => [
@@ -192,15 +194,11 @@ const PaintMap = (props) => {
       ...LAYER_CONFIGS[layer],
     }),
   ];
-  // console.log(renderLayers())
-
-
-
+  
   return (
     <section>
         {/* TitleBar */}
         <h3>glmaps demo</h3>
-        <span>Select display layer (default to TripLayer): </span>
         
         <div ref={mapEl} style={{
           position: 'relative',
@@ -220,7 +218,7 @@ const PaintMap = (props) => {
               height="90%" 
               layers={renderLayers()}
               viewState={viewState}
-              onViewStateChange={setViewState}
+              onViewStateChange={handleViewStateChange}
               controller={controller}
             >
               {baseMap && (

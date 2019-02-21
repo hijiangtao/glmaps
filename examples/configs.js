@@ -123,7 +123,7 @@ const LAYER_CONFIGS = {
     }
   }
   
-  const INIT_LAYER = 'TripLayer';
+  const INIT_LAYER = 'ScreenGridLayer';
 
   export {
       INIT_LAYER,

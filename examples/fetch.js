@@ -50,7 +50,7 @@ export const fetchData = ({type = 'BrushArcLayer', url = '../data/counties.json'
       break;
     case 'TripLayer':
     default:
-      resolve({});
+      resolve([]);
       break;
   }
 })
