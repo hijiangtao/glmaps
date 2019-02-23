@@ -4,6 +4,10 @@ body {
   overflow: hidden;
 }
 
+hr {
+  border: 1px solid gray;
+}
+
 #menu {
   position: absolute;
   z-index: 2;

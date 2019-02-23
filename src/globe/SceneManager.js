@@ -84,7 +84,7 @@ function createSceneSubject(scene, dataCollection, flyerGroup) {
     blending: THREE.AdditiveBlending,
     opacity: 0.6,
     transparent: true,
-    color: getColor(4),
+    color: getColor(4), // CURVE_COLOR
   });
   let curveMesh = new THREE.Mesh();
   const instanceCollection = [];
@@ -369,7 +369,7 @@ function SceneManager() {
 }
 
 SceneManager.getInstance = function (canvas, otherProps) {
-  console.log('SceneManager report: ', this.instance);
+  // console.log('SceneManager report: ', this.instance);
 
   if (!this.instance) {
     this.instance = new SceneManagerProto(canvas, otherProps);

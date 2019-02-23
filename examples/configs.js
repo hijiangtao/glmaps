@@ -22,7 +22,7 @@ const LAYER_CONFIGS = {
       opacity: 0.8,
       radiusScale: 10,
       radiusMinPixels: 0,
-      radiusMaxPixels: 200,
+      radiusMaxPixels: 2000,
       getPosition: d => d.COORDINATES,
       getRadius: () => 14000,
       showWaveAnimation: true,
@@ -49,7 +49,7 @@ const LAYER_CONFIGS = {
       ],
       coverage: 1,
       elevationRange: [0, 3000],
-      elevationScale: 50,
+      elevationScale: 300,
       extruded: true,
       getPosition: d => d.COORDINATES,
       getElevationValue: d => d.reduce((accumulator, currentValue) => currentValue ? accumulator + currentValue.SPACES : accumulator, 0),
@@ -74,7 +74,7 @@ const LAYER_CONFIGS = {
       id: 'screen-grid-layer',
       getPosition: d => d.COORDINATES,
       getWeight: d => d.SPACES,
-      cellSize: 30,
+      cellSize: 10,
       extruded: true,
       gpuAggregation: true,
       pickable: true,
@@ -123,7 +123,7 @@ const LAYER_CONFIGS = {
     }
   }
   
-  const INIT_LAYER = 'AugmentHexagonLayer';
+  const INIT_LAYER = 'ScreenGridLayer';
 
   export {
       INIT_LAYER,
