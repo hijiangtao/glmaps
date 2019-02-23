@@ -41,10 +41,12 @@ const PARAMS_TYPES = [{
 const GLOBE_SHAPES = [{
   name: 'Curves',
   value: 'curve',
-}, {
-  name: 'Points',
-  value: 'point',
-}, {
+}, 
+// {
+//   name: 'Points',
+//   value: 'point',
+// }, 
+{
   name: 'CubeMap',
   value: 'cube',
 }]
