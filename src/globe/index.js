@@ -1,5 +1,7 @@
-import React, { memo, useEffect } from 'react';
+import React, { memo, useEffect, useLayoutEffect, useRef } from 'react';
 import SceneManager from './SceneManager';
+let raf;
+let resizeCanvas;
 
 /**
  * Three Instance Entrance Point
@@ -8,15 +10,14 @@ import SceneManager from './SceneManager';
 const threeEntryPoint = ({id, ...otherProps}) => {
   const canvas = document.getElementById(id);
   const sceneManager = SceneManager.getInstance(canvas, otherProps);
-  let raf = null;
+  raf = null;
   
   function bindEventListeners() {
-    // window.onresize = resizeCanvas;
     window.addEventListener ("resize", resizeCanvas);
 
     resizeCanvas();
   }
-  function resizeCanvas() {
+  resizeCanvas = function() {
     canvas.style.width = '100%';
     canvas.style.height = '100%';
     canvas.width = canvas.offsetWidth;
@@ -31,23 +32,35 @@ const threeEntryPoint = ({id, ...otherProps}) => {
   bindEventListeners();
   render();
 
-  return [canvas, raf, resizeCanvas];
+  const cleanFunc = () => {
+    const gl = canvas.getContext('webgl');
+    gl.clearColor(1.0, 1.0, 0.0, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    window.removeEventListener("resize", resizeCanvas);
+    cancelAnimationFrame(raf);
+    SceneManager.destroyInstance();
+  }
+
+  return [cleanFunc];
 }
 
 /**
  * Three Cube Class
  */
 const ThreeCube = (props) => {
+  const {
+    data = [], 
+    animate = true, 
+    id = 'canvasGlobe',
+    visType = 'point',
+    moon = true
+  } = props;
+
+  
   useEffect(() => {
-    const {
-      data = [], 
-      animate = true, 
-      id = 'canvasGlobe',
-      visType = 'point',
-      moon = true
-    } = props;
-    
-    const [canvas, raf, resizeFunc] = threeEntryPoint({
+    if (!data.length) return () => {};
+
+    const [cleanFunc] = threeEntryPoint({
       id,
       data,
       animate,
@@ -56,24 +69,21 @@ const ThreeCube = (props) => {
     });
 
     return () => {
-      const gl = canvas.getContext('webgl');
-      gl.clearColor(1.0, 1.0, 0.0, 1.0);
-      gl.clear(gl.COLOR_BUFFER_BIT);
-      cancelAnimationFrame(raf);
-      window.removeEventListener("resize", resizeFunc);
-    }
-  }, [props.data]);
+      cleanFunc();
+    };
+  });
 
   return (
     <canvas 
-      id="canvasGlobe"
+      id={id}
+      // ref={canvasEl}
       style={{
         width: '100%',
         height: '100%',
         backgroundColor: 'rgba(0,0,0,1)'
       }}
     />
-  )
+  );
 };
 
-export default memo(ThreeCube);
+export default ThreeCube;

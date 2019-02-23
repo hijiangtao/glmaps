@@ -123,7 +123,7 @@ const LAYER_CONFIGS = {
     }
   }
   
-  const INIT_LAYER = 'ScreenGridLayer';
+  const INIT_LAYER = 'AugmentHexagonLayer';
 
   export {
       INIT_LAYER,

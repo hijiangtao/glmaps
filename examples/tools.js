@@ -1,9 +1,9 @@
 /*
- * @Author: 黯晓 (anxiao.jt@alibaba-inc.com) 
+ * @Author: hijiangtao (hijiangtao@gmail.com) 
  * @Date: 2019-01-23 16:51:30 
- * @Desc: 
- * @Last Modified by: 黯晓 (anxiao.jt@alibaba-inc.com)
- * @Last Modified time: 2019-01-29 14:05:09
+ * @Desc: Tools
+ * @Last Modified by: hijiangtao (hijiangtao@gmail.com)
+ * @Last Modified time: 2019-02-23 16:23:09
  */
 
 import MapboxLanguage from '@mapbox/mapbox-gl-language';
@@ -19,6 +19,9 @@ const addMapControl = (map) => {
   }));
 }
 
+const preventDefault = evt => evt.preventDefault();
+
 export {
   addMapControl,
+  preventDefault,
 }

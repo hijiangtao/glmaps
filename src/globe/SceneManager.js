@@ -47,7 +47,7 @@ function createSceneSubject(scene, dataCollection, flyerGroup) {
 
       // Bump Texture
       bumpMap: loader.load(EARTH_BUMP_TEXTURE),
-      bumpScale: 0.05,
+      bumpScale: 0.5,
 
       // Specular Texture
       // specularMap: loader.load(EARTH_SPECULAR_TEXTURE),
@@ -90,31 +90,33 @@ function createSceneSubject(scene, dataCollection, flyerGroup) {
   const instanceCollection = [];
 
   // TODO: unify the approach of instance creating, rather than Curve and CubeMesh.
-  if (visType === 'curve') {
-    visData.forEach((coords, index) => {
-      const item = new Curve(coords, material);
-      instanceCollection.push(item);
-
-      return curveMesh.add(item.mesh);
+  if (visData.length) {
+    if (visType === 'curve') {
+      visData.forEach((coords, index) => {
+        const item = new Curve(coords, material);
+        instanceCollection.push(item);
   
-      // if (index % 2) {
-      //   const curve = new Curve(coords, material);
-      //   curveMesh.add(curve.mesh);
-      // } else {
-      //   const tube = new Tube(coords, material);
-      //   curveMesh.add(tube.mesh);
-      // }
-    });
-  } else if (visType === 'cube') {
-    const item = new CubeMesh(visData);
-    curveMesh = item.cubemesh;
-  } else if (visType === 'point') {
-    visData.forEach((coords, index) => {
-      const item = new Mover(coords);
-      instanceCollection.push(item);
-
-      return curveMesh.add(item.mesh);
-    });
+        return curveMesh.add(item.mesh);
+    
+        // if (index % 2) {
+        //   const curve = new Curve(coords, material);
+        //   curveMesh.add(curve.mesh);
+        // } else {
+        //   const tube = new Tube(coords, material);
+        //   curveMesh.add(tube.mesh);
+        // }
+      });
+    } else if (visType === 'cube') {
+      const item = new CubeMesh(visData);
+      curveMesh = item.cubemesh;
+    } else if (visType === 'point') {
+      visData.forEach((coords, index) => {
+        const item = new Mover(coords);
+        instanceCollection.push(item);
+  
+        return curveMesh.add(item.mesh);
+      });
+    }
   }
   
 
@@ -125,6 +127,8 @@ function createSceneSubject(scene, dataCollection, flyerGroup) {
     if (moon) {
       group.add(moonMesh);
     }
+
+    scene.remove(scene.children[-1]);
   }
   group.add(curveMesh);
   scene.add(group);
@@ -274,6 +278,7 @@ function SceneManagerProto(canvas, {data = [], animate, visType, moon}) {
   this.props = {
     animate,
     visType,
+    moon,
     curveSegmentIndex: 0,
     pointSegmentIndex: 0,
   }
@@ -285,17 +290,24 @@ function SceneManagerProto(canvas, {data = [], animate, visType, moon}) {
    * Data update
    */
   this.updateSceneData = ({data, animate, visType, moon}) => {
-    // console.log(newDatasets)
+    console.time('updateSceneData');
+    
+    this.props.visType = visType;
+    this.props.animate = animate;
+    this.props.moon = moon;
 
     // Delete old data
     const pathsIndex = this.flyerGroup.children.length - 1;
     this.flyerGroup.remove(this.flyerGroup.children[pathsIndex]);
+    
     // Re-construct objects
     [this.sceneSubject, this.flyerGroup] = createSceneSubject(this.scene, {
       data,
       visType,
       moon,
     }, this.flyerGroup);
+
+    console.timeEnd('updateSceneData')
   };
 
   /**
@@ -315,8 +327,9 @@ function SceneManagerProto(canvas, {data = [], animate, visType, moon}) {
     this.propsUpdate();
     
     // animation update
-    if (this.props.animate) {
+    if (this.props.animate && this.props.visType !== 'cube') {
       const segIndex = this.props.visType === 'point' ? this.props.pointSegmentIndex : this.props.curveSegmentIndex;
+      // console.log('Current segment index is', segIndex)
       this.sceneSubject.update(segIndex);
     }
 
@@ -356,6 +369,8 @@ function SceneManager() {
 }
 
 SceneManager.getInstance = function (canvas, otherProps) {
+  console.log('SceneManager report: ', this.instance);
+
   if (!this.instance) {
     this.instance = new SceneManagerProto(canvas, otherProps);
   } else {
@@ -363,5 +378,9 @@ SceneManager.getInstance = function (canvas, otherProps) {
   }
   return this.instance;
 };
+
+SceneManager.destroyInstance = function () {
+  this.instance = null;
+}
 
 export default SceneManager;

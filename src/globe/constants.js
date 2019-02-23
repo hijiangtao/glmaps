@@ -7,7 +7,7 @@ export const MOON_RADIUS = 55;
 export const PI_TWO = Math.PI * 2;
 export const PI_HALF = Math.PI / 2;
 
-export const CURVE_SEGMENTS = 150;
+export const CURVE_SEGMENTS = 300;
 export const CURVE_MIN_ALTITUDE = 20;
 export const CURVE_MAX_ALTITUDE = 200;
 export const CURVE_COLOR = 0xe43c59;

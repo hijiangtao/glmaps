@@ -8,7 +8,7 @@ import {
   TripLayer,
 } from '../index';
 
-import React, { memo, useState, useEffect, useLayoutEffect, useRef } from 'react';
+import React, { memo, useState, useEffect, useLayoutEffect, useRef, useMemo } from 'react';
 import {StaticMap} from 'react-map-gl';
 import DeckGL, {FlyToInterpolator} from 'deck.gl';
 
@@ -62,6 +62,17 @@ const PARAMS_TYPES = [{
   value: true,
 }];
 
+const GLOBE_SHAPES = [{
+  name: 'Curves',
+  value: 'curve',
+}, {
+  name: 'Points',
+  value: 'point',
+}, {
+  name: 'CubeMap',
+  value: 'cube',
+}]
+
 const preventDefault = evt => evt.preventDefault();
 
 const useInit = () => {
@@ -70,6 +81,8 @@ const useInit = () => {
   const [animation, setAnimation] = useState(true);
   const [viewState, setViewState] = useState(LAYER_CONFIGS[INIT_LAYER].INIT_VIEW_STATE);
   const [data, setData] = useState([]);
+  const [refresh, setRefresh] = useState(false);
+  const [globeShape, setGlobeShape] = useState('curve');
 
   const mapEl = useRef();
 
@@ -88,6 +101,8 @@ const useInit = () => {
     })
     .then((res) => {
       setData(res);
+      // dataRef.current = res;
+      setRefresh(!refresh);
     })
     .catch(err => console.log(err));
 
@@ -98,6 +113,7 @@ const useInit = () => {
         layer: INIT_LAYER,
         animation: true,
         moon: true,
+        shape: 'curve'
       },
       configMap: [{
         title: 'Options',
@@ -115,16 +131,23 @@ const useInit = () => {
           property: 'animation',
           name: 'Animation',
           setter: setAnimation,
-          configs: true,
+          configs: animation,
           convertType: 'none',
           stateType: 'bool',
         }, {
           property: 'moon',
           name: 'Moon',
           setter: setMoon,
-          configs: true,
+          configs: moon,
           convertType: 'none',
           stateType: 'bool',
+        }, {
+          property: 'shape',
+          name: 'Type',
+          setter: setGlobeShape,
+          configs: GLOBE_SHAPES,
+          convertType: 'json',
+          stateType: 'string',
         }],
       }],
     };
@@ -145,12 +168,15 @@ const useInit = () => {
           url: LAYER_CONFIGS[newLayer].url,
         });
 
+        console.log('Data updated')
         setData(result);
+        // dataRef.current = result;
         setViewState({
           ...LAYER_CONFIGS[newLayer].INIT_VIEW_STATE,
           transitionInterpolator: new FlyToInterpolator(),
           transitionDuration: 5000
         });
+        setRefresh(!refresh);
     } catch (e) {
       console.error(e);
     }
@@ -163,9 +189,12 @@ const useInit = () => {
    */
   useLayoutEffect(() => {
     // fetch data
+    // console.log('useLayoutEffect again')
     fetchUpdateDataset(layer);
+    // console.log('after fetchUpdateDataset lifecycle', data);
 
     return () => {
+      // console.log('clean again')
       setData([]);
     };
   }, [layer]);
@@ -177,7 +206,7 @@ const useInit = () => {
     }
   };
 
-  return [layer, data, viewState, handleViewStateChange, mapEl, addControlHandler];
+  return [layer, data, globeShape, viewState, refresh, handleViewStateChange, mapEl, addControlHandler];
 }
 
 const PaintMap = (props) => {
@@ -185,228 +214,70 @@ const PaintMap = (props) => {
     controller = true, 
     baseMap = true,
   } = props;
-  const [layer, data, viewState, handleViewStateChange, mapEl, addControlHandler] = useInit();
+  const [layer, data, visType, viewState, refresh, handleViewStateChange, mapEl, addControlHandler] = useInit();
 
   const Layer = Layers[layer];
-  const renderLayers = () => [
-    new Layer({
-      data,
-      ...LAYER_CONFIGS[layer],
-    }),
-  ];
-  
+
+  const deckRootEl = useMemo(() => {
+    return layer === 'Globe' ? (
+      <Globe 
+        moon={true}
+        visType={visType}
+        data={data} />
+    ) : (
+      <DeckGL
+        // width="100%" 
+        // height="100%" 
+        layers={[
+          new Layer({
+            data,
+            ...LAYER_CONFIGS[layer],
+          }),
+        ]}
+        viewState={viewState}
+        onViewStateChange={handleViewStateChange}
+        controller={controller}
+      >
+        {baseMap && (
+          <StaticMap
+            onLoad={addControlHandler}
+            // reuseMaps
+            mapStyle="mapbox://styles/mapbox/dark-v9"
+            preventStyleDiffing
+            mapboxApiAccessToken={MAPBOX_TOKEN}
+          />
+        )}
+      </DeckGL>
+    )
+  }, [viewState, refresh, visType])
+
   return (
     <section>
         {/* TitleBar */}
-        <h3>glmaps demo</h3>
+        <div className="title-container">
+          <h3>glmaps demo</h3>
+          <p>Read codes in <a href="https://github.com/hijiangtao/glmaps">GitHub</a></p>
+          <p>
+            cd YOUR_FOLDER<br/>
+            npm install glmaps --save<br/>
+            import * as glmaps from 'glmaps'<br/>
+            const {'{Globe}'} = glmaps
+          </p>
+        </div>
         
         <div ref={mapEl} style={{
           position: 'relative',
-          marginTop: '2px',
-          width: '100%',
-          height: '80vh',
+          width: '100vw',
+          height: '100vh',
         }}>
-          {/* TODO: New Menu */}
+          {/* New Menu */}
           <div id="menu" />
 
           {/* Map or Globe layer */}
-          {layer === 'Globe' ? (
-            <Globe data={data} />
-          ) : (
-            <DeckGL
-              width="100%" 
-              height="90%" 
-              layers={renderLayers()}
-              viewState={viewState}
-              onViewStateChange={handleViewStateChange}
-              controller={controller}
-            >
-              {baseMap && (
-                <StaticMap
-                  onLoad={addControlHandler}
-                  // reuseMaps
-                  mapStyle="mapbox://styles/mapbox/dark-v9"
-                  preventStyleDiffing
-                  mapboxApiAccessToken={MAPBOX_TOKEN}
-                />
-              )}
-            </DeckGL>
-          )}
+          {deckRootEl}
         </div>
-        <a href="https://github.com/hijiangtao/glmaps">GitHub</a>
-        <footer>npm install glmaps --save</footer>
       </section>
   )
 }
-
-
-// class PaintMap extends PureComponent {
-//   constructor(props) {
-//     super(props);
-//     this.data = [];
-    
-//     fetchData({
-//       type: INIT_LAYER,
-//       url: LAYER_CONFIGS[INIT_LAYER].url
-//     })
-//     .then((res) => {
-//       this.toggleRefresh({res, layer: INIT_LAYER});
-//     })
-//     .catch(err => console.log(err));
-//   }
-
-//   state = {
-//     layer: INIT_LAYER,
-//     refresh: false,
-//     viewState: LAYER_CONFIGS[INIT_LAYER].INIT_VIEW_STATE,
-//   }
-
-//   componentDidMount() {
-//     this.mapElement.addEventListener('contextmenu', evt => evt.preventDefault());
-//     this.mapElement.addEventListener('mousewheel', evt => evt.preventDefault());
-//   }
-
-//   componentWillUnmount() {
-//     this.mapElement.removeEventListener('contextmenu', evt => evt.preventDefault());
-//     this.mapElement.removeEventListener('mousewheel', evt => evt.preventDefault());
-//   }
-
-//   toggleRefresh = ({res = [], ...otherProps}) => {
-//     this.data = res;
-
-//     this.setState((prevState) => {
-//       return {
-//         ...prevState,
-//         refresh: !prevState.refresh,
-//         ...otherProps
-//       }
-//     });
-//   }
-
-//   _renderLayers = () => {
-//     const {layer} = this.state;
-//     const Layer = Layers[layer];
-
-//     return [
-//       new Layer({
-//         data: this.data,
-//         ...LAYER_CONFIGS[layer],
-//       }),
-//     ];
-//   }
-
-//   _onViewStateChange = ({viewState}) => {
-//     this.setState({viewState});
-//   }
-
-//   /**
-//    * Menu selection handler
-//    */
-//   onSelectChangeHandler = ({target}) => {
-//     const layer = target.value;
-
-//     fetchData({
-//       type: layer,
-//       url: LAYER_CONFIGS[layer].url,
-//     })
-//     .then((res) => {
-//       // this.deckglIns && this.deckglIns.setProps({
-//       //   viewState: LAYER_CONFIGS[layer].INIT_VIEW_STATE
-//       // })
-//       this.toggleRefresh({
-//         res, 
-//         layer,
-//         viewState: {
-//           ...LAYER_CONFIGS[layer].INIT_VIEW_STATE,
-//           transitionInterpolator: new FlyToInterpolator(),
-//           transitionDuration: 5000
-//         }
-//       });
-//     })
-//     .catch(err => console.log(err));
-//   }
-
-//   /**
-//    * Change map control
-//    * @param {*} event 
-//    */
-//   addControlHandler = (event) => {
-//     const map = event && event.target;
-//     if (map) {
-//       addMapControl(map);
-//     }
-//   };
-
-//   render() {
-//     const {
-//       controller = true, 
-//       baseMap = true,
-//     } = this.props;
-
-//     const {layer} = this.state;
-//     const {viewState} = this.state;
-//     const compProps = LAYER_CONFIGS[layer].PROPS;
-//     // const initialViewState = LAYER_CONFIGS[layer].INIT_VIEW_STATE;
-
-//     return (
-//       <section>
-//         <h3>glmaps demo</h3>
-//         <span>Select display layer (default to TripLayer): </span>
-
-//         {/* Menu */}
-//         <select 
-//           onChange={this.onSelectChangeHandler}
-//           value={this.state.layer} >
-//           <option value="IconLayer">IconLayer</option>
-//           <option value="BrushArcLayer">BrushArcLayer</option>
-//           <option value="FadeScatterplotLayer">FadeScatterplotLayer</option>
-//           <option value="AugmentHexagonLayer">AugmentHexagonLayer</option>
-//           <option value="ScreenGridLayer">ScreenGridLayer</option>
-//           <option value="Globe">Globe</option>
-//           <option value="TripLayer">TripLayer</option>
-//         </select>
-
-        
-//         <div ref={e => {this.mapElement = e;}} style={{
-//           position: 'relative',
-//           marginTop: '2px',
-//           width: '100%',
-//           height: '80vh',
-//         }}>
-//           {/* TODO: New Menu */}
-
-//           {/* Map or Globe layer */}
-//           {this.state.layer === 'Globe' ? (
-//             <Globe data={this.data} />
-//           ) : (
-//             <DeckGL
-//               ref={e => this.deckglIns = e}
-//               width="100%" 
-//               height="90%" 
-//               layers={this._renderLayers()}
-//               // initialViewState={initialViewState}
-//               viewState={viewState}
-//               onViewStateChange={this._onViewStateChange}
-//               controller={controller}
-//             >
-//               {baseMap && (
-//                 <StaticMap
-//                   onLoad={this.addControlHandler}
-//                   ref={e => this.staticMap = e}
-//                   // reuseMaps
-//                   mapStyle="mapbox://styles/mapbox/dark-v9"
-//                   preventStyleDiffing
-//                   mapboxApiAccessToken={MAPBOX_TOKEN}
-//                 />
-//               )}
-//             </DeckGL>
-//           )}
-//         </div>
-//         <a href="https://github.com/hijiangtao/glmaps">GitHub</a>
-//         <footer>npm install glmaps --save</footer>
-//       </section>
-//     );
-//   }
-// }
 
 export default memo(PaintMap);
