@@ -1,4 +1,4 @@
-<p align="center"><img width="100" src="https://hijiangtao.github.io/glmaps/assets/glmaps.png" alt="glmaps logo"></p>
+<p align="center"><img width="70%" src="https://user-images.githubusercontent.com/4990015/53287147-186d4a00-37b3-11e9-814c-8f6af08badfb.png" alt="glmaps logo"></p>
 
 <h1 align="center">glmaps</h1>
 
