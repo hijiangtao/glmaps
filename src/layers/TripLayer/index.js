@@ -34,7 +34,6 @@ export default class TripMap extends CompositeLayer {
   }
 
   shouldUpdateState({changeFlags}) {
-    console.log(changeFlags)
     if (changeFlags.propsChanged || changeFlags.dataChanged || changeFlags.stateChanged) {
       return true;
     }

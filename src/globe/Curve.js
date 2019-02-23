@@ -6,7 +6,7 @@ export default function Curve(coords, material) {
   const { spline } = getSplineFromCoords(coords);
 
   // add curve geometry
-  const curveGeometry = new THREE.BufferGeometry();
+  this.curveGeometry = new THREE.BufferGeometry();
   const points = new Float32Array(CURVE_SEGMENTS * 3);
   const vertices = spline.getPoints(CURVE_SEGMENTS - 1);
 
@@ -20,8 +20,8 @@ export default function Curve(coords, material) {
 
   // !!!
   // You can use setDrawRange to animate the curve
-  curveGeometry.addAttribute('position', new THREE.BufferAttribute(points, 3));
-  curveGeometry.setDrawRange(0, CURVE_SEGMENTS);
+  this.curveGeometry.addAttribute('position', new THREE.BufferAttribute(points, 3));
+  this.curveGeometry.setDrawRange(0, CURVE_SEGMENTS / 7);
 
-  this.mesh = new THREE.Line(curveGeometry, material);
+  this.mesh = new THREE.Line(this.curveGeometry, material);
 }

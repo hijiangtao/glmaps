@@ -5,7 +5,7 @@ const LAYER_CONFIGS = {
       getTargetPosition: d => d.target, 
       showBrushAnimation: true,
       speed: 0.005,
-      url: './data/counties.json',
+      url: '../data/counties.json',
       INIT_VIEW_STATE: {
         longitude: -104.96,
         latitude: 40.66033,
@@ -22,11 +22,11 @@ const LAYER_CONFIGS = {
       opacity: 0.8,
       radiusScale: 10,
       radiusMinPixels: 0,
-      radiusMaxPixels: 200,
+      radiusMaxPixels: 2000,
       getPosition: d => d.COORDINATES,
       getRadius: () => 14000,
       showWaveAnimation: true,
-      url: './data/meteorites.json',
+      url: '../data/meteorites.json',
       INIT_VIEW_STATE: {
         longitude: -104.96,
         latitude: 40.66033,
@@ -49,7 +49,7 @@ const LAYER_CONFIGS = {
       ],
       coverage: 1,
       elevationRange: [0, 3000],
-      elevationScale: 50,
+      elevationScale: 300,
       extruded: true,
       getPosition: d => d.COORDINATES,
       getElevationValue: d => d.reduce((accumulator, currentValue) => currentValue ? accumulator + currentValue.SPACES : accumulator, 0),
@@ -59,7 +59,7 @@ const LAYER_CONFIGS = {
       radius: 40000,
       upperPercentile: 100,
       showAnimation: true,
-      url: './data/meteorites.json',
+      url: '../data/meteorites.json',
       INIT_VIEW_STATE: {
         longitude: -104.96,
         latitude: 40.66033,
@@ -74,11 +74,11 @@ const LAYER_CONFIGS = {
       id: 'screen-grid-layer',
       getPosition: d => d.COORDINATES,
       getWeight: d => d.SPACES,
-      cellSize: 30,
+      cellSize: 10,
       extruded: true,
       gpuAggregation: true,
       pickable: true,
-      url: './data/meteorites.json',
+      url: '../data/meteorites.json',
       INIT_VIEW_STATE: {
         longitude: -104.96,
         latitude: 40.66033,
@@ -91,7 +91,7 @@ const LAYER_CONFIGS = {
     },
     IconLayer: {
       id: 'icon-layer',
-      url: './data/meteorites.json',
+      url: '../data/meteorites.json',
       showCluster: true,
       INIT_VIEW_STATE: {
         longitude: -104.96,
@@ -123,7 +123,7 @@ const LAYER_CONFIGS = {
     }
   }
   
-  const INIT_LAYER = 'TripLayer';
+  const INIT_LAYER = 'ScreenGridLayer';
 
   export {
       INIT_LAYER,
