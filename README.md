@@ -25,7 +25,7 @@ Spatio-temporal data visualization example codes and learning tutorials.
 
 ## What is glmaps?
 
-A node package full of bunch of earth and map visualization examples based on Three.js and Deck.gl, easy to learn and use. 
+`glmaps` is a project full of bunch of earth and map visualization examples based on Three.js and Deck.gl, as well as some tutorials for visualization beginners. Easy to learn and use. 
 
 ## MENU
 
@@ -60,11 +60,11 @@ Check all visualization types that `glmaps` contains, `2.5D` means you can draw 
 
 ## ZERO
 
-Some thoughts from me that you may pay attention before have future reading.
+Thanks for your attention in this project, there are some thoughts from me that you may pay attention before have future reading.
 
 **Q: What frameworks are used in `glmaps`?**
 
-React Hooks is ready in 16.8.0, and `glmaps` get benefits from it at once, if you are not familiar with it, please check [Introducing Hooks](https://reactjs.org/docs/hooks-intro.html) first; On the other hand, deck.gl is WebGL2 powered geospatial visualization layers, so please make sure your browser support WebGL2. To find out if WebGL(2) is enabled in your browser, go to <http://get.webgl.org/> or <https://get.webgl.org/webgl2/>. 
+**React Hooks** is ready in 16.8.0, and `glmaps` get benefits from it at once, if you are not familiar with it, please check [Introducing Hooks](https://reactjs.org/docs/hooks-intro.html) first; On the other hand, deck.gl is **WebGL2** powered geospatial visualization layers, so please make sure your browser support WebGL2. To find out if WebGL(2) is enabled in your browser, go to <http://get.webgl.org/> or <https://get.webgl.org/webgl2/>. 
 
 Besides, if you meet any errors when depoly it locally, you can describe your problem with [issues](https://github.com/hijiangtao/glmaps/issues/new), because that's most likely a problem of `glmaps` rather than yourself, since `glmaps` organizes local development environment from scratch, such as webpack, babel, etc.
 
