@@ -1,4 +1,4 @@
-<p align="center"><img width="70%" src="https://user-images.githubusercontent.com/4990015/53287147-186d4a00-37b3-11e9-814c-8f6af08badfb.png" alt="glmaps logo"></p>
+<p align="center"><img width="70%" src="./assets/screenshots/glmaps.png" alt="glmaps logo"></p>
 
 <h1 align="center">glmaps</h1>
 
@@ -52,14 +52,18 @@ npm install
 npm run start
 ```
 
-## 从零开始学习时空可视化系列教程（待完善）
+## 从零开始学习时空可视化系列教程
 
-* 从零开始学习时空可视化（零） / 用 React 框架管理你的 three.js 项目 - TBD
-* 从零开始学习时空可视化（一） / 用 three.js 画出你的第一个地球 - TBD
-* 从零开始学习时空可视化（二） / 深入浅出 three.js 点、线、面、体的实现过程 - TBD
-* 从零开始学习时空可视化（三） / 利用 props 与 transitions 让你的 deck.gl 图层动起来 - TBD
-* 从零开始学习时空可视化（四） / 手写 shader 给你的 deck.gl 动画另辟蹊径 - TBD
-* 从零开始学习时空可视化（五） / 使用 three.js 和 deck.gl 开发的踩坑记录 - TBD
+暂定八篇教程，如有需要可以提 [issue]((https://github.com/hijiangtao/glmaps/issues/new)) 讨论。
+
+* 从零开始学习时空可视化（零） / three.js 入门笔记 - TBD
+* 从零开始学习时空可视化（一） / deck.gl 入门笔记 - TBD
+* 从零开始学习时空可视化（二） / 用 React 框架管理你的 three.js 项目 - TBD
+* 从零开始学习时空可视化（三） / 用 three.js 画出你的第一个地球 - TBD
+* 从零开始学习时空可视化（四） / 深入浅出 three.js 点、线、面、体的实现过程 - TBD
+* 从零开始学习时空可视化（五） / 利用 props 与 transitions 让你的 deck.gl 图层动起来 - TBD
+* 从零开始学习时空可视化（六） / 手写 shader 给你的 deck.gl 动画另辟蹊径 - TBD
+* 从零开始学习时空可视化（七） / 使用 three.js 和 deck.gl 开发的踩坑记录 - TBD
 
 ## 安装
 
