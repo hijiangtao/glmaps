@@ -27,6 +27,8 @@ Spatio-temporal data visualization example codes and tutorials from scratch.
 
 `glmaps` is a project full of bunch of earth and map visualization examples based on Three.js and Deck.gl, as well as some tutorials for visualization beginners. Easy to learn and use. 
 
+Watch online demo video at [YouTube](https://youtu.be/dddmamIAYj8) or [Tencent Video](https://v.qq.com/x/page/x0841840qwl.html).
+
 ## MENU
 
 1. [Overview](#Overview) - Check all visualization types that `glmaps` contains.
