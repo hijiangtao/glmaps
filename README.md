@@ -4,7 +4,11 @@
 
 <center>
 
+<<<<<<< HEAD
+Spatio-temporal data visualization example codes and tutorials from scratch.
+=======
 Spatio-temporal data visualization example codes and learning tutorials.
+>>>>>>> ecc32b1328f4e52501ef0cb33e5fcd5f2d17b5c6
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/c913db53b5a3470f840f5329ea2f54d4)](https://www.codacy.com/app/hijiangtao/glmaps?utm_source=github.com&utm_medium=referral&utm_content=hijiangtao/glmaps&utm_campaign=badger)
 [![npm](https://img.shields.io/npm/v/glmaps.svg)](https://www.npmjs.com/package/glmaps)
@@ -26,6 +30,8 @@ Spatio-temporal data visualization example codes and learning tutorials.
 ## What is glmaps?
 
 `glmaps` is a project full of bunch of earth and map visualization examples based on Three.js and Deck.gl, as well as some tutorials for visualization beginners. Easy to learn and use. 
+
+Watch online demo video at [YouTube](https://youtu.be/dddmamIAYj8) or [Tencent Video](https://v.qq.com/x/page/x0841840qwl.html).
 
 ## MENU
 

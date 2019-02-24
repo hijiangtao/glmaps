@@ -27,6 +27,8 @@
 
 glmaps 是一个包含多个时空数据可视化示例代码集与学习教程的开源项目。该项目中的可视化效果基于可视化库 `three.js` 与 `deck.gl` 实现，非常容易上手，希望本项目对正在时空可视化学习之路上探寻的你有所帮助。
 
+我录制了一段短视频用于展现 `glmaps` 的可视化示例效果，你可以在 [YouTube](https://youtu.be/dddmamIAYj8) 或者[腾讯视频]()查看。
+
 ## 目录
 
 1. [概览](#概览) - 快速查阅 `glmaps` 都包含哪些数据可视化形式
@@ -62,13 +64,13 @@ glmaps 是一个包含多个时空数据可视化示例代码集与学习教程�
 
 首先感谢你对 `glmaps` 项目的关注。在你进一步阅读本项目之前，想对你说的一些话。
 
-**Q: 除了列出的可视化框架，`glmaps` 项目还用到了哪些 Web 技术?**
+**Q1: 除了列出的可视化框架，`glmaps` 项目还用到了哪些 Web 技术?**
 
-**React Hooks** is ready in 16.8.0, and `glmaps` get benefits from it at once, if you are not familiar with it, please check [Introducing Hooks](https://reactjs.org/docs/hooks-intro.html) first; On the other hand, deck.gl is **WebGL2** powered geospatial visualization layers, so please make sure your browser support WebGL2. To find out if WebGL(2) is enabled in your browser, go to <http://get.webgl.org/> or <https://get.webgl.org/webgl2/>. 
+从 16.8.0 开始，**Hooks** 便正式登陆 React，`glmaps` 在开发过程中也从中受益很多。如果你还不了解 React Hooks，建议先查看 [Introducing Hooks](https://reactjs.org/docs/hooks-intro.html) 了解大概，因为 `glmaps` 在多处使用到了各类 Hooks。另一方面，由于 deck.gl 利用了 **WebGL2** 特性进行可视化绘制，所以在查看 demo 前请确保你的浏览器支持这项技术。你可以通过 <http://get.webgl.org/> 或者 <https://get.webgl.org/webgl2/> 网站来查看你的浏览器对 WebGL(2) 的支持情况。  
 
-Besides, if you meet any errors when depoly it locally, you can describe your problem with [issues](https://github.com/hijiangtao/glmaps/issues/new), because that's most likely a problem of `glmaps` rather than yourself, since `glmaps` organizes local development environment from scratch, such as webpack, babel, etc.
+除此外，由于 `glmaps` 未采用类似 create-react-app 这样成熟的脚手架进行搭建，而是我按需在构建流程上对 webpack 及 Babel 中的功能进行组合，因此在打包构建方面一定还存在诸多需要继续完善的地方。若你在本地运行 Demo 时遇到任何报错，我相信这都可能是 `glmaps` 本身的问题，而非你的问题，欢迎通过 [issues](https://github.com/hijiangtao/glmaps/issues/new) 和我交流讨论。
 
-**Q: Guidance for visualization beginners?**
+**Q2: 可视化初学者该如何利用这个项目学习？**
 
 I highly recommend you follows these steps in using `glmaps`:
   - Learn how to install three.js and deck.gl from scratch, and code your first "Hello World" with them;
@@ -78,7 +80,7 @@ I highly recommend you follows these steps in using `glmaps`:
   - Rewrite `glmaps` example with your own codes;
   - Congratulations on mastering basics of spatio-temporal visualization, you can use `three.js` and `deck.gl` to draw a more fantastic world with spatio-temporal data!
 
-**Q: How to participate in `glmaps` project?**
+**Q3: 如何参与到 `glmaps` 项目中来？**
 
 `glmaps` is still at the very beginning period of my thoughts, you are welcome to oepn ISSUE, PR or email me, if you have any ideas on how to make `glmaps` better for visualization beginners:
   - Participate in implementing tutorials together;
@@ -86,6 +88,14 @@ I highly recommend you follows these steps in using `glmaps`:
   - Speak out your doubts in learning data visualization with [issues](https://github.com/hijiangtao/glmaps/issues/new);
   - Tell me your advice on how to make `glmaps` better with [issues](https://github.com/hijiangtao/glmaps/issues/new);
   - Other aspects not included yet.
+
+**Q4: `glmaps` 的更新策略？**
+
+前两天云舒在朋友圈的动态突然成了热点新闻，其中我非常赞同第一句的后半句「特地写出来大家看到，省得我改变心意」，`glmaps` 也是在这种环境下诞生的。
+
+不要误解，我不离婚，我只是想说即便 `glmaps` 还处于初期阶段，我仍决定现在把它分享出来。起初，这个想法诞生于两个多月前，我曾在问题「[作为前端工程师的你在深入研究哪些领域？](https://www.zhihu.com/question/303354718/answer/558177026)」中说到新的一年要多搞搞数据可视化，但由于工作忙碌与天生懒惰，于是一直在给自己找往后拖延的借口。
+
+现在把它分享出来，一方面是代码层面在基本功能上已完善，另一方面是想通过公开来鞭策自己按时完成剩余文章的编写，即「自我催更」。由于平时还有工作要完成，所以我会利用好晚上及周末的时间来逐步完善这个项目，step by step。
 
 ## Demo
 
