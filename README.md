@@ -29,6 +29,8 @@ Spatio-temporal data visualization example codes and tutorials from scratch.
 
 Watch online demo video at [YouTube](https://youtu.be/dddmamIAYj8) or [Tencent Video](https://v.qq.com/x/page/x0841840qwl.html).
 
+A brief introduction of thie project is now available at [Meidum](https://medium.com/@hijiangtao/data-visualization-examples-and-tutorials-from-scratch-with-glmaps-2b93f478607f), [Zhihu](https://zhuanlan.zhihu.com/p/57548743) and my [blog](https://hijiangtao.github.io/2019/02/24/Learn-Spatio-Temporal-Data-Visualization-with-glmaps-from-Scratch/).
+
 ## MENU
 
 1. [Overview](#Overview) - Check all visualization types that `glmaps` contains.
@@ -76,7 +78,7 @@ I highly recommend you follows these steps in using `glmaps`:
   - Learn how to install three.js and deck.gl from scratch, and code your first "Hello World" with them;
   - Run official demos and get familiar with their API;
   - Follow the tutorials step by step to make your visualization examples more powerful, or check `glmaps` codes in `src` folder directly;
-  - (Optional) Use `glmaps` in your demo application;
+  - (Optional) Use `glmaps` in your demo application, start with `npm install glmaps --save`;
   - Rewrite `glmaps` example with your own codes;
   - Congratulations on mastering basics of spatio-temporal visualization, you can use `three.js` and `deck.gl` to draw a more fantastic world with spatio-temporal data!
 
@@ -102,7 +104,7 @@ touch devconfigs.js
 
 To use any of Mapbox's APIs, you'll need a Mapbox access token. Mapbox uses access tokens to associate requests to API resources with your account. Since TOKEN is a private key, glmaps doesn't provide it in codes, you need to specify it in file `devconfigs.js`.
 
-Here's what an access token looks like (focus on the string starts with `pk.`， create your mapbox Token at [here](https://account.mapbox.com/access-tokens/)) and the `devconfigs.js` file format:
+Here's what an access token looks like (focus on the string starts with `pk.`, replace it with your own token. You can create your mapbox Token [here](https://account.mapbox.com/access-tokens/)) and the `devconfigs.js` file format:
 
 ```
 // devconfigs.js
@@ -113,7 +115,7 @@ export {
 }
 ```
 
-*Tips: You can utilize Search engine to get other's mapbox tokens, here's one token I got from GitHub Search: 'pk.eyJ1IjoiY3NuIiwiYSI6ImNpdnRvam1qeDAwMXgyenRlZjZiZWc1a2wifQ.Gr5pLJzG-1tucwY4h-rGdA'*
+*Tips: You can utilize Search engine to get other's mapbox tokens if you don't want to create a new one, here's one token I got from GitHub Search: 'pk.eyJ1IjoiY3NuIiwiYSI6ImNpdnRvam1qeDAwMXgyenRlZjZiZWc1a2wifQ.Gr5pLJzG-1tucwY4h-rGdA', though it's not recommend to "steal" other's token…*
 
 Save changes in `devconfigs.js` and go on:
 

@@ -29,6 +29,8 @@ glmaps 是一个包含多个时空数据可视化示例代码集与学习教程�
 
 我录制了一段短视频用于展现 `glmaps` 的可视化示例效果，你可以在 [YouTube](https://youtu.be/dddmamIAYj8) 或者[腾讯视频]()查看。
 
+从零开始学习时空数据可视化的第一篇文章已经发布，文中全面介绍了这个项目都包含什么。你可以根据你的阅读习惯在 [Meidum](https://medium.com/@hijiangtao/data-visualization-examples-and-tutorials-from-scratch-with-glmaps-2b93f478607f)，[知乎](https://zhuanlan.zhihu.com/p/57548743)或者[我的博客](https://hijiangtao.github.io/2019/02/24/Learn-Spatio-Temporal-Data-Visualization-with-glmaps-from-Scratch/)进行查看。
+
 ## 目录
 
 1. [概览](#概览) - 快速查阅 `glmaps` 都包含哪些数据可视化形式
