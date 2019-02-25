@@ -97,8 +97,31 @@ Open browser and enter <https://localhost:8080> to check the demo locally. Pleas
 git clone git@github.com:hijiangtao/glmaps.git
 cd glmaps
 npm install
+touch devconfigs.js
+```
+
+To use any of Mapbox's APIs, you'll need a Mapbox access token. Mapbox uses access tokens to associate requests to API resources with your account. Since TOKEN is a private key, glmaps doesn't provide it in codes, you need to specify it in file `devconfigs.js`.
+
+Here's what an access token looks like (focus on the string starts with `pk.`， create your mapbox Token at [here](https://account.mapbox.com/access-tokens/)) and the `devconfigs.js` file format:
+
+```
+// devconfigs.js
+const MAPBOX_TOKEN = 'pk.eyJ1IjoiaGlqaWFuZ3RhbyIsImEiOiJjampxcjFnb3E2NTB5M3BvM253ZHV5YjhjIn0.WneUon5qFigfJRJ3oaZ3Ow';
+
+export {
+  MAPBOX_TOKEN,  
+}
+```
+
+*Tips: You can utilize Search engine to get other's mapbox tokens, here's one token I got from GitHub Search: 'pk.eyJ1IjoiY3NuIiwiYSI6ImNpdnRvam1qeDAwMXgyenRlZjZiZWc1a2wifQ.Gr5pLJzG-1tucwY4h-rGdA'*
+
+Save changes in `devconfigs.js` and go on:
+
+```
 npm run start
 ```
+
+When `glmaps` is ready, it will open browser automatically, and render demos for you.
 
 ## Tutorials
 
@@ -173,6 +196,41 @@ This part is still under constructing, however, you can access full codes in `sr
   2. Mover
   3. Cube
   4. Moon
+
+```
+src
+├── globe
+│   ├── CubeMesh.js
+│   ├── Curve.js
+│   ├── Mover.js
+│   ├── README.md
+│   ├── SceneManager.js
+│   ├── Tube.js
+│   ├── constants.js
+│   ├── index.js
+│   ├── index.less
+│   └── utils.js
+├── index.js
+└── layers
+    ├── AnimationLayer
+    │   └── index.js
+    ├── ArcLayer
+    │   ├── animate.js
+    │   └── index.js
+    ├── HexagonLayer
+    │   └── index.js
+    ├── IconLayer
+    │   ├── cluster.js
+    │   ├── icon-mapping.js
+    │   └── index.js
+    ├── README.md
+    ├── ScatterplotLayer
+    │   └── index.js
+    ├── ScreenGridLayer
+    │   └── index.js
+    └── TripLayer
+        └── index.js
+```
 
 ## Stories
 

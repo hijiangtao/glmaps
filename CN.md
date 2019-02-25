@@ -72,13 +72,15 @@ glmaps 是一个包含多个时空数据可视化示例代码集与学习教程�
 
 **Q2: 可视化初学者该如何利用这个项目学习？**
 
-I highly recommend you follows these steps in using `glmaps`:
-  - Learn how to install three.js and deck.gl from scratch, and code your first "Hello World" with them;
-  - Run official demos and get familiar with their API;
-  - Follow the tutorials step by step to make your visualization examples more powerful, or check `glmaps` codes in `src` folder directly;
-  - (Optional) Use `glmaps` in your demo application;
-  - Rewrite `glmaps` example with your own codes;
-  - Congratulations on mastering basics of spatio-temporal visualization, you can use `three.js` and `deck.gl` to draw a more fantastic world with spatio-temporal data!
+我比较建议你采用如下顺序配合 `glmaps` 进行学习：
+  - 先学习如何在你的项目中引入 three.js 以及 deck.gl，了解基本的使用、项目创建，这部分内容直接在 three.js 与 deck.gl 官网便可找到。尝试根据教程，试试画出你的第一个图形；
+  - 大概扫一下这两个框架的主 API 都有哪些，并试试下些官方 demo 在本地运行，感受下这些框架在实现可视化上的巨大能力；
+  - 跟着「从零开始学习时空数据可视化系列」教程一步步把 glmaps 中涉及到的可视化案例都实现一遍；如果你对 three.js 与 deck.gl 有过一定的尝试，你也可以直接参考我在 `src` 文件夹中抽象出的代码；
+  - （可选）尝试通过 `npm install glmaps --save` 在你的 demo 中引入 glmaps 进行展现；
+  - 按照你的理解重写 `glmaps` 示例代码，并为他添加更多特性；
+  - 恭喜你已经成功入门基本的时空数据可视化编程！你现在可以更加深入地了解 three.js 或者 deck.gl，并更加自信地创作出更好的可视化作品。
+
+在完成这些学习后，你将可以独立实现如上列出的几种可视化形式作品，而个人认为这些形式已经大致包含了基本的时空可视化类型。
 
 **Q3: 如何参与到 `glmaps` 项目中来？**
 
@@ -105,8 +107,29 @@ I highly recommend you follows these steps in using `glmaps`:
 git clone git@github.com:hijiangtao/glmaps.git
 cd glmaps
 npm install
+touch devconfigs.js
+```
+
+由于2.5D地图底图由 Mapbox 提供，所以该处需要自行配置一个 Mapbox Token，存在以上生成的 `devconfigs.js` 文件中，文件中内容格式如下（将 pk 开头的那一长串字符串替换为实际 Token 即可，Mapbox Token 配置请移步[这里](https://account.mapbox.com/access-tokens/)）：
+
+```
+// devconfigs.js
+const MAPBOX_TOKEN = 'pk.eyJ1IjoiaGlqaWFuZ3RhbyIsImEiOiJjampxcjFnb3E2NTB5M3BvM253ZHV5YjhjIn0.WneUon5qFigfJRJ3oaZ3Ow';
+
+export {
+  MAPBOX_TOKEN,  
+}
+```
+
+*注：虽然这样说不太好，但是当你懒得自己申请 TOKEN 的时候，可以巧妙的利用搜索引擎通过关键字搜到别人的不小心传到往上的 TOKEN。比如 <https://github.com/search?q=MAPBOX_TOKEN&type=Code>，排在第一的可用 TOKEN 长成这样 'pk.eyJ1IjoiY3NuIiwiYSI6ImNpdnRvam1qeDAwMXgyenRlZjZiZWc1a2wifQ.Gr5pLJzG-1tucwY4h-rGdA'...*
+
+以上文件配置完成之后，打开命令行继续：
+
+```
 npm run start
 ```
+
+构建完成后会自动打开浏览器页面，你便可以看到效果啦。
 
 ## 从零开始学习时空数据可视化系列教程
 
@@ -181,6 +204,41 @@ const Demo = (props) => {
   2. Mover
   3. Cube
   4. Moon
+
+```
+src
+├── globe
+│   ├── CubeMesh.js
+│   ├── Curve.js
+│   ├── Mover.js
+│   ├── README.md
+│   ├── SceneManager.js
+│   ├── Tube.js
+│   ├── constants.js
+│   ├── index.js
+│   ├── index.less
+│   └── utils.js
+├── index.js
+└── layers
+    ├── AnimationLayer
+    │   └── index.js
+    ├── ArcLayer
+    │   ├── animate.js
+    │   └── index.js
+    ├── HexagonLayer
+    │   └── index.js
+    ├── IconLayer
+    │   ├── cluster.js
+    │   ├── icon-mapping.js
+    │   └── index.js
+    ├── README.md
+    ├── ScatterplotLayer
+    │   └── index.js
+    ├── ScreenGridLayer
+    │   └── index.js
+    └── TripLayer
+        └── index.js
+```
 
 ## 背后的故事
 
