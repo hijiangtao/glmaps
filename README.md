@@ -31,7 +31,7 @@ Watch online demo video at [YouTube](https://youtu.be/dddmamIAYj8) or [Tencent V
 
 A brief introduction of thie project is now available at [Meidum](https://medium.com/@hijiangtao/data-visualization-examples-and-tutorials-from-scratch-with-glmaps-2b93f478607f), [Zhihu](https://zhuanlan.zhihu.com/p/57548743) and my [blog](https://hijiangtao.github.io/2019/02/24/Learn-Spatio-Temporal-Data-Visualization-with-glmaps-from-Scratch/).
 
-## MENU
+## Table of Contents
 
 1. [Overview](#Overview) - Check all visualization types that `glmaps` contains.
 2. [ZERO](#ZERO) - Some thoughts from me that you may pay attention before have future reading.
@@ -41,8 +41,9 @@ A brief introduction of thie project is now available at [Meidum](https://medium
 6. [Usage](#Usage) - Usage for how to include `glmaps` in your application.
 7. [Documents](#Documents) - API document for `glmaps`. TBD.
 8. [Stories](#Stories) - Stories behind this repositry.
-9. [Contact](#Contact)
-10. [LICENSE](#LICENSE)
+9. [Resources](#Resources) - Resources for further learning in Spatio-temporal Data Visualization, WebGL, etc.
+10. [Contact](#Contact)
+11. [LICENSE](#LICENSE)
 
 ## Overview
 
@@ -233,6 +234,13 @@ src
     └── TripLayer
         └── index.js
 ```
+
+## Resources
+
+### 1. Online Tutorials
+
+* [WebGL Fundamentals](https://webglfundamentals.org/)
+* [WebGL2 Fundamentals](https://webgl2fundamentals.org/)
 
 ## Stories
 
