@@ -42,8 +42,6 @@ A brief introduction of thie project is now available at [Meidum](https://medium
 7. [Documents](#Documents) - API document for `glmaps`. TBD.
 8. [Stories](#Stories) - Stories behind this repositry.
 9. [Resources](#Resources) - Resources for further learning in Spatio-temporal Data Visualization, WebGL, etc.
-10. [Contact](#Contact)
-11. [LICENSE](#LICENSE)
 
 ## Overview
 
@@ -237,16 +235,22 @@ src
 
 ## Resources
 
-### 1. Online Tutorials
+You are welcome to raise PR to add more contents of this part, let's contribute together to make it more valuable.
+
+### 1. Online Book/Series
 
 * [WebGL Fundamentals](https://webglfundamentals.org/)
 * [WebGL2 Fundamentals](https://webgl2fundamentals.org/)
+
+### 2. Video Tutorials
+
+TBD
 
 ## Stories
 
 **Q: Why I create this repositry?**
 
-A: I am really impressed by many open source developers when I learning how to visualize data on Web. They had contributed a lof of codes and resources in guiding beginners. I want to record what I learned and coded with these visualization frameworks, and hope that can raise your interests in data visualization, too.
+A: I am really impressed by many open source developers when I learning how to visualize data on Web. They had contributed a lof of codes and resources in guiding beginners. This year, I want to take visualization as a serious work to do in my spare time. I will keep on record what I learned in my blog, at the same time I want to share more and hope my notes and codes can raise your interests in data visualization, too. Keep Simple and Love Visualization.
 
 ## Contact
 

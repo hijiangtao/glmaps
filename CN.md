@@ -27,7 +27,7 @@
 
 glmaps 是一个包含多个时空数据可视化示例代码集与学习教程的开源项目。该项目中的可视化效果基于可视化库 `three.js` 与 `deck.gl` 实现，非常容易上手，希望本项目对正在时空可视化学习之路上探寻的你有所帮助。
 
-我录制了一段短视频用于展现 `glmaps` 的可视化示例效果，你可以在 [YouTube](https://youtu.be/dddmamIAYj8) 或者[腾讯视频]()查看。
+我录制了一段短视频用于展现 `glmaps` 的可视化示例效果，你可以在 [YouTube](https://youtu.be/dddmamIAYj8) 或者[腾讯视频](https://v.qq.com/x/page/x0841840qwl.html)查看。
 
 从零开始学习时空数据可视化的第一篇文章已经发布，文中全面介绍了这个项目都包含什么。你可以根据你的阅读习惯在 [Meidum](https://medium.com/@hijiangtao/data-visualization-examples-and-tutorials-from-scratch-with-glmaps-2b93f478607f)，[知乎](https://zhuanlan.zhihu.com/p/57548743)或者[我的博客](https://hijiangtao.github.io/2019/02/24/Learn-Spatio-Temporal-Data-Visualization-with-glmaps-from-Scratch/)进行查看。
 
@@ -42,8 +42,6 @@ glmaps 是一个包含多个时空数据可视化示例代码集与学习教程�
 7. [文档](#文档) - `glmaps` API 文档（TBD）
 8. [背后的故事](#背后的故事)
 9. [其他学习资源](#其他学习资源) - 社区其他开放的学习资源推荐，供进一步学习阅读
-9. [联系方式](#联系方式)
-10. [协议](#协议)
 
 ## 概览
 
@@ -245,10 +243,16 @@ src
 
 ## 其他学习资源
 
-### 1. 在线教程
+如果你在学习过程中有发现任何有价值的学习资料，欢迎提交 PR 完善本部分，让我们一起把它建设的更好。
+
+### 1. 在线图书
 
 * CN/EN - [WebGL 理论基础](https://webglfundamentals.org/)
 * EN - [WebGL2 理论基础](https://webgl2fundamentals.org/)
+
+### 2. 视频教程
+
+TBD
 
 ## 背后的故事
 
