@@ -9,14 +9,14 @@ import {HexagonCellLayer, CompositeLayer} from 'deck.gl';
 
 const DEFAULT_COLOR = [255, 0, 255, 255];
 
-const COLOR_MAP = [
-  [35, 255, 222],
-  [75, 255, 35],
-  [164, 255, 35],
-  [255,140,0],
-  [255,56,0],
-  [255,0,0],
-];
+// const COLOR_MAP = [
+//   [35, 255, 222],
+//   [75, 255, 35],
+//   [164, 255, 35],
+//   [255,140,0],
+//   [255,56,0],
+//   [255,0,0],
+// ];
 
 const MOCK_DATA = [
   { COORDINATES: [-122.4, 37.7], COLOR: [255, 0, 0], SPACES: 100 },
@@ -46,19 +46,17 @@ class HexagonPrimitiveLayer extends CompositeLayer {
       ...otherProps
     } = this.props;
     
-    // calculate the maximum value for item.NUMBER
-    let max = 0;
-    data.map(item => {
-      if(max < item.NUMBER) {
-        max = item.NUMBER;
-      }
+    // calculate the maximum value for item.SPACES
+    data.sort((a, b) => {
+      return b.SPACES - a.SPACES;
     });
+    let max = data[0].SPACES;
+    let filterDataset = data.slice(0, Math.max(Number.parseInt(data.length*coverage), data.length));
 
     const layerProps = {
       ...otherProps,
-      id: `${this.id}-h-child`,
-      // coverage,
-      data,
+      id: `${this.id}-hp-child`,
+      data: filterDataset,
       radius,
       angle,
       elevationScale,

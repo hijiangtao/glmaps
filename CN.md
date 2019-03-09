@@ -58,6 +58,7 @@ glmaps 是一个包含多个时空数据可视化示例代码集与学习教程�
 |2.5D / Hexagon|支持排序筛选| [![](./assets/screenshots/HexagonLayer.jpeg)](./src/layers/HexagonLayer/index.js) | Yes | Yes |
 |2.5D / Grid|支持排序筛选| [![](./assets/screenshots/ScreenGridLayer.jpeg)](./src/layers/ScreenGridLayer/index.js) | No | Yes |
 |2.5D / Trip|与 deck 示例一致，无更改| [![](./assets/screenshots/TripLayer.jpeg)](./src/layers/TripLayer/index.js) | Yes | No |
+|[2.5D / Cube](./src/layers/HexagonLayer/primitive.js)|支持排序筛选| [![]()](./src/layers/HexagonLayer/primitive.js) | No | No |
 |Other / Segment|与飞线动画效果一致| [![](./assets/screenshots/Globe-CurveSegment.jpeg)](./src/globe/index.js) | No | No |
 |Other / Moon|地月系统| [![](./assets/screenshots/Globe-Moon.jpeg)](./src/globe/index.js) | No | No |
 

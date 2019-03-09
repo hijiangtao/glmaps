@@ -58,6 +58,7 @@ Check all visualization types that `glmaps` contains, `2.5D` means you can draw 
 |[2.5D / Hexagon](./src/layers/HexagonLayer/index.js)|Support Coverage Filter Conditions| [![](./assets/screenshots/HexagonLayer.jpeg)](./src/layers/HexagonLayer/index.js) | Yes | Yes |
 |[2.5D / Grid](./src/layers/ScreenGridLayer/index.js)|Support Coverage Filter Conditions| [![](./assets/screenshots/ScreenGridLayer.jpeg)](./src/layers/ScreenGridLayer/index.js) | No | Yes |
 |[2.5D / Trip](./src/layers/TripLayer/index.js)|No modification from deck| [![](./assets/screenshots/TripLayer.jpeg)](./src/layers/TripLayer/index.js) | Yes | No |
+|[2.5D / Cube](./src/layers/HexagonLayer/primitive.js)|No modification from deck| [![]()](./src/layers/HexagonLayer/primitive.js) | No | No |
 |[Other / Segment](./src/globe/index.js)|The same as curve animation| [![](./assets/screenshots/Globe-CurveSegment.jpeg)](./src/globe/index.js) | No | No |
 |[Other / Moon](./src/globe/index.js)|Earth-Moon System| [![](./assets/screenshots/Globe-Moon.jpeg)](./src/globe/index.js) | No | No |
 
