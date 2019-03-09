@@ -29,7 +29,9 @@ Spatio-temporal data visualization example codes and tutorials from scratch.
 
 Watch online demo video at [YouTube](https://youtu.be/dddmamIAYj8) or [Tencent Video](https://v.qq.com/x/page/x0841840qwl.html).
 
-## MENU
+A brief introduction of thie project is now available at [Meidum](https://medium.com/@hijiangtao/data-visualization-examples-and-tutorials-from-scratch-with-glmaps-2b93f478607f), [Zhihu](https://zhuanlan.zhihu.com/p/57548743) and my [blog](https://hijiangtao.github.io/2019/02/24/Learn-Spatio-Temporal-Data-Visualization-with-glmaps-from-Scratch/).
+
+## Table of Contents
 
 1. [Overview](#Overview) - Check all visualization types that `glmaps` contains.
 2. [ZERO](#ZERO) - Some thoughts from me that you may pay attention before have future reading.
@@ -39,8 +41,7 @@ Watch online demo video at [YouTube](https://youtu.be/dddmamIAYj8) or [Tencent V
 6. [Usage](#Usage) - Usage for how to include `glmaps` in your application.
 7. [Documents](#Documents) - API document for `glmaps`. TBD.
 8. [Stories](#Stories) - Stories behind this repositry.
-9. [Contact](#Contact)
-10. [LICENSE](#LICENSE)
+9. [Resources](#Resources) - Resources for further learning in Spatio-temporal Data Visualization, WebGL, etc.
 
 ## Overview
 
@@ -57,6 +58,7 @@ Check all visualization types that `glmaps` contains, `2.5D` means you can draw 
 |[2.5D / Hexagon](./src/layers/HexagonLayer/index.js)|Support Coverage Filter Conditions| [![](./assets/screenshots/HexagonLayer.jpeg)](./src/layers/HexagonLayer/index.js) | Yes | Yes |
 |[2.5D / Grid](./src/layers/ScreenGridLayer/index.js)|Support Coverage Filter Conditions| [![](./assets/screenshots/ScreenGridLayer.jpeg)](./src/layers/ScreenGridLayer/index.js) | No | Yes |
 |[2.5D / Trip](./src/layers/TripLayer/index.js)|No modification from deck| [![](./assets/screenshots/TripLayer.jpeg)](./src/layers/TripLayer/index.js) | Yes | No |
+|[2.5D / Cube](./src/layers/HexagonLayer/primitive.js)|No modification from deck| [![]()](./src/layers/HexagonLayer/primitive.js) | No | No |
 |[Other / Segment](./src/globe/index.js)|The same as curve animation| [![](./assets/screenshots/Globe-CurveSegment.jpeg)](./src/globe/index.js) | No | No |
 |[Other / Moon](./src/globe/index.js)|Earth-Moon System| [![](./assets/screenshots/Globe-Moon.jpeg)](./src/globe/index.js) | No | No |
 
@@ -76,7 +78,7 @@ I highly recommend you follows these steps in using `glmaps`:
   - Learn how to install three.js and deck.gl from scratch, and code your first "Hello World" with them;
   - Run official demos and get familiar with their API;
   - Follow the tutorials step by step to make your visualization examples more powerful, or check `glmaps` codes in `src` folder directly;
-  - (Optional) Use `glmaps` in your demo application;
+  - (Optional) Use `glmaps` in your demo application, start with `npm install glmaps --save`;
   - Rewrite `glmaps` example with your own codes;
   - Congratulations on mastering basics of spatio-temporal visualization, you can use `three.js` and `deck.gl` to draw a more fantastic world with spatio-temporal data!
 
@@ -97,8 +99,31 @@ Open browser and enter <https://localhost:8080> to check the demo locally. Pleas
 git clone git@github.com:hijiangtao/glmaps.git
 cd glmaps
 npm install
+touch devconfigs.js
+```
+
+To use any of Mapbox's APIs, you'll need a Mapbox access token. Mapbox uses access tokens to associate requests to API resources with your account. Since TOKEN is a private key, glmaps doesn't provide it in codes, you need to specify it in file `devconfigs.js`.
+
+Here's what an access token looks like (focus on the string starts with `pk.`, replace it with your own token. You can create your mapbox Token [here](https://account.mapbox.com/access-tokens/)) and the `devconfigs.js` file format:
+
+```
+// devconfigs.js
+const MAPBOX_TOKEN = 'pk.eyJ1IjoiaGlqaWFuZ3RhbyIsImEiOiJjampxcjFnb3E2NTB5M3BvM253ZHV5YjhjIn0.WneUon5qFigfJRJ3oaZ3Ow';
+
+export {
+  MAPBOX_TOKEN,  
+}
+```
+
+*Tips: You can utilize Search engine to get other's mapbox tokens if you don't want to create a new one, here's one token I got from GitHub Search: 'pk.eyJ1IjoiY3NuIiwiYSI6ImNpdnRvam1qeDAwMXgyenRlZjZiZWc1a2wifQ.Gr5pLJzG-1tucwY4h-rGdA', though it's not recommend to "steal" other's token…*
+
+Save changes in `devconfigs.js` and go on:
+
+```
 npm run start
 ```
+
+When `glmaps` is ready, it will open browser automatically, and render demos for you.
 
 ## Tutorials
 
@@ -174,11 +199,59 @@ This part is still under constructing, however, you can access full codes in `sr
   3. Cube
   4. Moon
 
+```
+src
+├── globe
+│   ├── CubeMesh.js
+│   ├── Curve.js
+│   ├── Mover.js
+│   ├── README.md
+│   ├── SceneManager.js
+│   ├── Tube.js
+│   ├── constants.js
+│   ├── index.js
+│   ├── index.less
+│   └── utils.js
+├── index.js
+└── layers
+    ├── AnimationLayer
+    │   └── index.js
+    ├── ArcLayer
+    │   ├── animate.js
+    │   └── index.js
+    ├── HexagonLayer
+    │   └── index.js
+    ├── IconLayer
+    │   ├── cluster.js
+    │   ├── icon-mapping.js
+    │   └── index.js
+    ├── README.md
+    ├── ScatterplotLayer
+    │   └── index.js
+    ├── ScreenGridLayer
+    │   └── index.js
+    └── TripLayer
+        └── index.js
+```
+
+## Resources
+
+You are welcome to raise PR to add more contents of this part, let's contribute together to make it more valuable.
+
+### 1. Online Book/Series
+
+* [WebGL Fundamentals](https://webglfundamentals.org/)
+* [WebGL2 Fundamentals](https://webgl2fundamentals.org/)
+
+### 2. Video Tutorials
+
+TBD
+
 ## Stories
 
 **Q: Why I create this repositry?**
 
-A: I am really impressed by many open source developers when I learning how to visualize data on Web. They had contributed a lof of codes and resources in guiding beginners. I want to record what I learned and coded with these visualization frameworks, and hope that can raise your interests in data visualization, too.
+A: I am really impressed by many open source developers when I learning how to visualize data on Web. They had contributed a lof of codes and resources in guiding beginners. This year, I want to take visualization as a serious work to do in my spare time. I will keep on record what I learned in my blog, at the same time I want to share more and hope my notes and codes can raise your interests in data visualization, too. Keep Simple and Love Visualization.
 
 ## Contact
 

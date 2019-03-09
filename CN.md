@@ -29,6 +29,8 @@ glmaps 是一个包含多个时空数据可视化示例代码集与学习教程�
 
 我录制了一段短视频用于展现 `glmaps` 的可视化示例效果，你可以在 [YouTube](https://youtu.be/dddmamIAYj8) 或者[腾讯视频](https://v.qq.com/x/page/x0841840qwl.html)查看。
 
+从零开始学习时空数据可视化的第一篇文章已经发布，文中全面介绍了这个项目都包含什么。你可以根据你的阅读习惯在 [Meidum](https://medium.com/@hijiangtao/data-visualization-examples-and-tutorials-from-scratch-with-glmaps-2b93f478607f)，[知乎](https://zhuanlan.zhihu.com/p/57548743)或者[我的博客](https://hijiangtao.github.io/2019/02/24/Learn-Spatio-Temporal-Data-Visualization-with-glmaps-from-Scratch/)进行查看。
+
 ## 目录
 
 1. [概览](#概览) - 快速查阅 `glmaps` 都包含哪些数据可视化形式
@@ -39,8 +41,7 @@ glmaps 是一个包含多个时空数据可视化示例代码集与学习教程�
 6. [用法](#用法) - 用法示例
 7. [文档](#文档) - `glmaps` API 文档（TBD）
 8. [背后的故事](#背后的故事)
-9. [联系方式](#联系方式)
-10. [协议](#协议)
+9. [其他学习资源](#其他学习资源) - 社区其他开放的学习资源推荐，供进一步学习阅读
 
 ## 概览
 
@@ -57,6 +58,7 @@ glmaps 是一个包含多个时空数据可视化示例代码集与学习教程�
 |2.5D / Hexagon|支持排序筛选| [![](./assets/screenshots/HexagonLayer.jpeg)](./src/layers/HexagonLayer/index.js) | Yes | Yes |
 |2.5D / Grid|支持排序筛选| [![](./assets/screenshots/ScreenGridLayer.jpeg)](./src/layers/ScreenGridLayer/index.js) | No | Yes |
 |2.5D / Trip|与 deck 示例一致，无更改| [![](./assets/screenshots/TripLayer.jpeg)](./src/layers/TripLayer/index.js) | Yes | No |
+|[2.5D / Cube](./src/layers/HexagonLayer/primitive.js)|支持排序筛选| [![]()](./src/layers/HexagonLayer/primitive.js) | No | No |
 |Other / Segment|与飞线动画效果一致| [![](./assets/screenshots/Globe-CurveSegment.jpeg)](./src/globe/index.js) | No | No |
 |Other / Moon|地月系统| [![](./assets/screenshots/Globe-Moon.jpeg)](./src/globe/index.js) | No | No |
 
@@ -72,13 +74,15 @@ glmaps 是一个包含多个时空数据可视化示例代码集与学习教程�
 
 **Q2: 可视化初学者该如何利用这个项目学习？**
 
-I highly recommend you follows these steps in using `glmaps`:
-  - Learn how to install three.js and deck.gl from scratch, and code your first "Hello World" with them;
-  - Run official demos and get familiar with their API;
-  - Follow the tutorials step by step to make your visualization examples more powerful, or check `glmaps` codes in `src` folder directly;
-  - (Optional) Use `glmaps` in your demo application;
-  - Rewrite `glmaps` example with your own codes;
-  - Congratulations on mastering basics of spatio-temporal visualization, you can use `three.js` and `deck.gl` to draw a more fantastic world with spatio-temporal data!
+我比较建议你采用如下顺序配合 `glmaps` 进行学习：
+  - 先学习如何在你的项目中引入 three.js 以及 deck.gl，了解基本的使用、项目创建，这部分内容直接在 three.js 与 deck.gl 官网便可找到。尝试根据教程，试试画出你的第一个图形；
+  - 大概扫一下这两个框架的主 API 都有哪些，并试试下些官方 demo 在本地运行，感受下这些框架在实现可视化上的巨大能力；
+  - 跟着「从零开始学习时空数据可视化系列」教程一步步把 glmaps 中涉及到的可视化案例都实现一遍；如果你对 three.js 与 deck.gl 有过一定的尝试，你也可以直接参考我在 `src` 文件夹中抽象出的代码；
+  - （可选）尝试通过 `npm install glmaps --save` 在你的 demo 中引入 glmaps 进行展现；
+  - 按照你的理解重写 `glmaps` 示例代码，并为他添加更多特性；
+  - 恭喜你已经成功入门基本的时空数据可视化编程！你现在可以更加深入地了解 three.js 或者 deck.gl，并更加自信地创作出更好的可视化作品。
+
+在完成这些学习后，你将可以独立实现如上列出的几种可视化形式作品，而个人认为这些形式已经大致包含了基本的时空可视化类型。
 
 **Q3: 如何参与到 `glmaps` 项目中来？**
 
@@ -105,8 +109,29 @@ I highly recommend you follows these steps in using `glmaps`:
 git clone git@github.com:hijiangtao/glmaps.git
 cd glmaps
 npm install
+touch devconfigs.js
+```
+
+由于2.5D地图底图由 Mapbox 提供，所以该处需要自行配置一个 Mapbox Token，存在以上生成的 `devconfigs.js` 文件中，文件中内容格式如下（将 pk 开头的那一长串字符串替换为实际 Token 即可，Mapbox Token 配置请移步[这里](https://account.mapbox.com/access-tokens/)）：
+
+```
+// devconfigs.js
+const MAPBOX_TOKEN = 'pk.eyJ1IjoiaGlqaWFuZ3RhbyIsImEiOiJjampxcjFnb3E2NTB5M3BvM253ZHV5YjhjIn0.WneUon5qFigfJRJ3oaZ3Ow';
+
+export {
+  MAPBOX_TOKEN,  
+}
+```
+
+*注：虽然这样说不太好，但是当你懒得自己申请 TOKEN 的时候，可以巧妙的利用搜索引擎通过关键字搜到别人的不小心传到往上的 TOKEN。比如 <https://github.com/search?q=MAPBOX_TOKEN&type=Code>，排在第一的可用 TOKEN 长成这样 'pk.eyJ1IjoiY3NuIiwiYSI6ImNpdnRvam1qeDAwMXgyenRlZjZiZWc1a2wifQ.Gr5pLJzG-1tucwY4h-rGdA'...*
+
+以上文件配置完成之后，打开命令行继续：
+
+```
 npm run start
 ```
+
+构建完成后会自动打开浏览器页面，你便可以看到效果啦。
 
 ## 从零开始学习时空数据可视化系列教程
 
@@ -181,6 +206,54 @@ const Demo = (props) => {
   2. Mover
   3. Cube
   4. Moon
+
+```
+src
+├── globe
+│   ├── CubeMesh.js
+│   ├── Curve.js
+│   ├── Mover.js
+│   ├── README.md
+│   ├── SceneManager.js
+│   ├── Tube.js
+│   ├── constants.js
+│   ├── index.js
+│   ├── index.less
+│   └── utils.js
+├── index.js
+└── layers
+    ├── AnimationLayer
+    │   └── index.js
+    ├── ArcLayer
+    │   ├── animate.js
+    │   └── index.js
+    ├── HexagonLayer
+    │   └── index.js
+    ├── IconLayer
+    │   ├── cluster.js
+    │   ├── icon-mapping.js
+    │   └── index.js
+    ├── README.md
+    ├── ScatterplotLayer
+    │   └── index.js
+    ├── ScreenGridLayer
+    │   └── index.js
+    └── TripLayer
+        └── index.js
+```
+
+## 其他学习资源
+
+如果你在学习过程中有发现任何有价值的学习资料，欢迎提交 PR 完善本部分，让我们一起把它建设的更好。
+
+### 1. 在线图书
+
+* CN/EN - [WebGL 理论基础](https://webglfundamentals.org/)
+* EN - [WebGL2 理论基础](https://webgl2fundamentals.org/)
+
+### 2. 视频教程
+
+TBD
 
 ## 背后的故事
 
