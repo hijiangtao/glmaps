@@ -5,7 +5,9 @@
  * @Last Modified time: 2019-01-14 17:44:05 
  */
 
+import React, { memo } from 'react';
 import {HexagonLayer, CompositeLayer} from 'deck.gl';
+import HexagonPrimitiveLayer from './primitive';
 
 const ELEVATION_SCALE = {min: 1, max: 500};
 const OVERFLOW_FLAG = 9999;
@@ -173,4 +175,12 @@ AugmentHexagonLayer.defaultProps = {
   }
 };
 
-export default AugmentHexagonLayer;
+const HexagonCollection = (props) => {
+  if (props.primitive) {
+    return <HexagonPrimitiveLayer {...props} />;
+  } else {
+    return <AugmentHexagonLayer {...props} />;
+  }
+}
+
+export default HexagonCollection;
