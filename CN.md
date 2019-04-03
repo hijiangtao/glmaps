@@ -137,7 +137,7 @@ npm run start
 
 暂定八篇教程，如有需要可以提 [issue]((https://github.com/hijiangtao/glmaps/issues/new)) 讨论。
 
-* 从零开始学习时空可视化（零） / three.js 入门笔记 - TBD
+* 从零开始学习时空可视化（零） / [three.js 简介与示例教学](https://hijiangtao.github.io/2019/04/03/Learn-Spatio-Temporal-Data-Visualization-with-glmaps-from-Scratch-One/) | [Demo](https://hijiangtao.github.io/glmaps/tutorials/example_three_geometry_hierarchy.html)
 * 从零开始学习时空可视化（一） / deck.gl 入门笔记 - TBD
 * 从零开始学习时空可视化（二） / 用 React 框架管理你的 three.js 项目 - TBD
 * 从零开始学习时空可视化（三） / 用 three.js 画出你的第一个地球 - TBD
