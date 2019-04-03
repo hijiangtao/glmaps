@@ -1,6 +1,6 @@
 {
   "name": "glmaps",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Earths and maps powered by Three.js and Deck.gl, easy to use",
   "main": "index.js",
   "scripts": {

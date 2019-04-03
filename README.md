@@ -186,14 +186,14 @@ More examples and detailed usage guidances can be found in documents.
 
 This part is still under constructing, however, you can access full codes in `src` folder right now.
 
-* [Layers (2.5D Map)](./layers/README.md)
+* [Layers (2.5D Map)](./src/layers/README.md)
   1. ArcLayer
   2. HexagonLayer
   3. IconLayer
   4. ScatterplotLayer
   5. ScreenGridLayer
   6. TripLayer
-* [Globe (3D Space)](./globe/README.md)
+* [Globe (3D Space)](./src/globe/README.md)
   1. Curve
   2. Mover
   3. Cube

@@ -194,14 +194,14 @@ const Demo = (props) => {
 
 本部分仍处于完善阶段。然而，你现在就可以直接在 `src` 文件夹下查看所有示例代码集。
 
-* [Layers (2.5D Map)](./layers/README.md)
+* [Layers (2.5D Map)](./src/layers/README.md)
   1. ArcLayer
   2. HexagonLayer
   3. IconLayer
   4. ScatterplotLayer
   5. ScreenGridLayer
   6. TripLayer
-* [Globe (3D Space)](./globe/README.md)
+* [Globe (3D Space)](./src/globe/README.md)
   1. Curve
   2. Mover
   3. Cube
