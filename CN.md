@@ -255,6 +255,10 @@ src
 
 TBD
 
+### 3. 相关技术介绍
+
+1. WebAssembly - <https://www.ibm.com/developerworks/cn/web/wa-lo-webassembly-status-and-reality/index.html>
+
 ## 背后的故事
 
 TBD
