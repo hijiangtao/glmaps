@@ -6,7 +6,7 @@ import {
   ArcLayer as BrushArcLayer,
   Globe,
   TripLayer,
-} from '../index';
+} from '../src/index';
 
 import React, { memo, useState, useEffect, useLayoutEffect, useRef, useMemo } from 'react';
 import {StaticMap} from 'react-map-gl';
@@ -14,7 +14,7 @@ import DeckGL, {FlyToInterpolator} from 'deck.gl';
 
 import {LAYER_CONFIGS, INIT_LAYER} from './configs';
 import {addMapControl} from './tools';
-import { MAPBOX_TOKEN } from '../devconfigs';
+// import { MAPBOX_TOKEN } from '../devconfigs';
 
 import { fetchData } from './fetch';
 import optionMenu from './menu';
@@ -38,7 +38,7 @@ const PaintMap = (props) => {
     controller = true, 
     baseMap = true,
   } = props;
-  const [layer, data, visType, viewState, animation, refresh, handleViewStateChange, mapEl, addControlHandler] = useInit();
+  const [layer, data, visType, viewState, animation, refresh, handleViewStateChange, mapEl, addControlHandler, mapboxToken] = useInit();
 
   const Layer = Layers[layer];
 
@@ -63,13 +63,13 @@ const PaintMap = (props) => {
         onViewStateChange={handleViewStateChange}
         controller={controller}
       >
-        {baseMap && (
+        {baseMap && mapboxToken && (
           <StaticMap
             onLoad={addControlHandler}
             // reuseMaps
             mapStyle="mapbox://styles/mapbox/dark-v9"
             preventStyleDiffing
-            mapboxApiAccessToken={MAPBOX_TOKEN}
+            mapboxApiAccessToken={mapboxToken}
           />
         )}
       </DeckGL>

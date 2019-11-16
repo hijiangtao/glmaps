@@ -3,6 +3,7 @@ import React, { useState, useEffect, useLayoutEffect, useRef, useMemo } from 're
 import {LAYER_CONFIGS, INIT_LAYER} from './configs';
 import {addMapControl} from './tools';
 import {FlyToInterpolator} from 'deck.gl';
+import qs from 'qs';
 
 import { fetchData } from './fetch';
 import optionMenu from './menu';
@@ -54,6 +55,16 @@ const GLOBE_SHAPES = [{
   value: 'cube',
 }]
 
+function getParameterByName(name, url) {
+  if (!url) url = window.location.href;
+  name = name.replace(/[\[\]]/g, '\\$&');
+  var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+      results = regex.exec(url);
+  if (!results) return null;
+  if (!results[2]) return '';
+  return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
 const preventDefault = evt => evt.preventDefault();
 
 const useInit = () => {
@@ -64,6 +75,7 @@ const useInit = () => {
   const [data, setData] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const [globeShape, setGlobeShape] = useState('curve');
+  const [mapboxToken, setMapboxToken] = useState('');
 
   const mapEl = useRef();
 
@@ -142,6 +154,10 @@ const useInit = () => {
     }
   }, []);
 
+  useEffect(() => {
+    setMapboxToken(getParameterByName('MAPBOX_TOKEN'));
+  });
+
   const fetchUpdateDataset = async (newLayer) => {
     try {
        const result = await fetchData({
@@ -187,7 +203,7 @@ const useInit = () => {
     }
   };
 
-  return [layer, data, globeShape, viewState, animation, refresh, handleViewStateChange, mapEl, addControlHandler];
+  return [layer, data, globeShape, viewState, animation, refresh, handleViewStateChange, mapEl, addControlHandler, mapboxToken];
 }
 
 export {

@@ -2,7 +2,8 @@
   "name": "glmaps",
   "version": "0.0.3",
   "description": "Earths and maps powered by Three.js and Deck.gl, easy to use",
-  "main": "index.js",
+  "main": "src/index.js",
+  "module": "src/index.js",
   "scripts": {
     "start": "webpack-dev-server --open --mode development --inline  --progress --config webpack.config.js",
     "build": "webpack --mode production",
@@ -40,6 +41,7 @@
     "three-trackballcontrols": "0.0.7"
   },
   "devDependencies": {
+    "qs": "^6.9.1",
     "@babel/core": "^7.2.2",
     "@babel/plugin-proposal-class-properties": "^7.3.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.3.2",
