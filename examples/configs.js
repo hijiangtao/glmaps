@@ -103,6 +103,21 @@ const LAYER_CONFIGS = {
         bearing: 0,
       }
     },
+    IconCSVLayer: {
+      id: 'general-csv-layer',
+      url: '../data/points.csv',
+      getPosition: d => d.coordinates,
+      showCluster: false,
+      INIT_VIEW_STATE: {
+        longitude: 108.9398,
+        latitude: 37.3416,
+        zoom: 4,
+        minZoom: 2,
+        maxZoom: 16,
+        pitch: 0,
+        bearing: 0,
+      }
+    },
     TripLayer: {
       buildings: 'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/trips/buildings.json',
       trips: 'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/trips/trips.json',

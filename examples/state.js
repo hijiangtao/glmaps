@@ -11,6 +11,9 @@ const LAYER_TYPES = [{
   name: '2.5D/Icon',
   value: 'IconLayer',
 }, {
+  name: '2.5D/IconCSV',
+  value: 'IconCSVLayer',
+}, {
   name: '2.5D/Brush',
   value: 'BrushArcLayer',
 }, {

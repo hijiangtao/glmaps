@@ -1,4 +1,5 @@
 import 'whatwg-fetch';
+import * as d3 from 'd3';
 
 /**
  * Get Demo Data according to Layer type and Data url
@@ -47,6 +48,15 @@ export const fetchData = ({type = 'BrushArcLayer', url = '../data/counties.json'
         });
       })
       .then(res => resolve(res));
+      break;
+    case 'IconCSVLayer':
+      d3.dsv(",", url, function(d) {
+        return {
+          coordinates: [ +d.lng, +d.lat ]
+        };
+      }).then(function(data) {
+        resolve(data);
+      });
       break;
     case 'TripLayer':
     default:
