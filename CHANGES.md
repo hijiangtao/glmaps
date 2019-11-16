@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## [0.0.3](https://github.com/hijiangtao/glmaps/releases/tag/0.0.3)
+
+This version focuses on fixing bugs and WebGL examples implement, and thi should be the last version which still supports deck.gl @v6.4.x (since deck.gl has updated to v7.3.x).
+
+Major modifications includes:
+
+1. WebGL example codes (within `WEBGL_EXAMPLES` folder);
+2. IconLayer demo with different data loading approach (CSV with d3 module);
+3. Bugfixes and deps update;
+
 ## [0.0.2](https://github.com/hijiangtao/glmaps/releases/tag/0.0.2)
 
 * add Hexagon Primitive Layer / 添加 Hexagon Primitive Layer 类型
