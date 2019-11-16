@@ -3,7 +3,6 @@ import React, { useState, useEffect, useLayoutEffect, useRef, useMemo } from 're
 import {LAYER_CONFIGS, INIT_LAYER} from './configs';
 import {addMapControl} from './tools';
 import {FlyToInterpolator} from 'deck.gl';
-import qs from 'qs';
 
 import { fetchData } from './fetch';
 import optionMenu from './menu';
