@@ -65,3 +65,5 @@ devconfigs.js
 
 # dist folder
 dist
+
+data/points.csv

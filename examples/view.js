@@ -28,6 +28,7 @@ const Layers = {
   AugmentHexagonLayer,
   ScreenGridLayer,
   IconLayer,
+  IconCSVLayer: IconLayer,
   Globe,
   TripLayer,
 }
