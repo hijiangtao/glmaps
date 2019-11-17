@@ -90,9 +90,16 @@ const LAYER_CONFIGS = {
     }
   },
   IconLayer: {
-    id: 'icon-layer',
-    url: '../data/meteorites.json',
-    showCluster: true,
+    data: {
+      // points: '../data/meteorites.json',
+    },
+    configs: {
+      id: 'icon-layer',
+      showCluster: true,
+    },
+    accessors: {
+      getPosition: d => d.coordinates,
+    },
     INIT_VIEW_STATE: {
       longitude: -104.96,
       latitude: 40.66033,
@@ -104,10 +111,16 @@ const LAYER_CONFIGS = {
     }
   },
   IconCSVLayer: {
-    id: 'general-csv-layer',
-    url: '../data/points.csv',
-    getPosition: d => d.coordinates,
-    showCluster: false,
+    data: {
+      // points: '../data/meteorites.json',
+    },
+    configs: {
+      id: 'icon-csv-layer',
+      showCluster: false,
+    },
+    accessors: {
+      getPosition: d => d.coordinates,
+    },
     INIT_VIEW_STATE: {
       longitude: 108.9398,
       latitude: 37.3416,
@@ -125,17 +138,10 @@ const LAYER_CONFIGS = {
       landCover: [[[-74.0, 40.7], [-74.02, 40.7], [-74.02, 40.72], [-74.0, 40.72]]],
     },
     configs: {
-      INIT_VIEW_STATE: {
-        longitude: -74,
-        latitude: 40.72,
-        zoom: 13,
-        maxZoom: 16,
-        pitch: 45,
-        bearing: 0
-      },
+      id: 'trip-layer',
       tripTrailLength: 180,
       groundStroked: false,
-      theme: DEFAULT_THEME,
+      // theme: DEFAULT_THEME,
       tripOpacity: 0.3,
       tripWidthMinPixels: 2,
       tripRounded: true,
@@ -147,6 +153,14 @@ const LAYER_CONFIGS = {
     accessors: {
       getTripPath: d => d.path,
       getTripTimestamps: d => d.timestamps
+    },
+    INIT_VIEW_STATE: {
+      longitude: -74,
+      latitude: 40.72,
+      zoom: 13,
+      maxZoom: 16,
+      pitch: 45,
+      bearing: 0
     },
   },
   Globe: {

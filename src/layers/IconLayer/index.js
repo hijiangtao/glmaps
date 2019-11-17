@@ -6,71 +6,124 @@
  */
 
 
-import {IconLayer, CompositeLayer} from 'deck.gl';
+import {CompositeLayer} from '@deck.gl/core';
+import {IconLayer} from '@deck.gl/layers';
 
 import IconClusterLayer from './cluster';
 import { iconMapping as DEFAULT_ICONMAPPING } from './icon-mapping';
 
-class IconMap extends CompositeLayer {
+class CompositeIconLayer extends CompositeLayer {
   renderLayers() {
     const {
-      data,
+      data = {},
+      configs = {},
+      accessors = {},
+    } = this.props;
+    console.log(this.props);
+
+    // const configs = {
+    //   showCluster: true,
+    //   iconAtlas: 'https://raw.githubusercontent.com/uber/deck.gl/17b1b9a5c7acd4503f85b81a68560b241a0f319e/examples/website/icon/data/location-icon-atlas.png',
+    //   iconMapping: DEFAULT_ICONMAPPING,
+    //   pickable: true,
+    //   sizeUnits: 'meters',
+    //   sizeScale: 2000,
+    //   sizeMinPixels: 6,
+    //   wrapLongitude: true,
+    //   // positionKeyName: 'coordinates',
+    // }
+    // const data = { 
+    //   points: 'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/icon/meteorites.json',
+    // };
+    // const accessors = {
+    //   getPosition: d => d.coordinates,
+    //   getIcon: () => 'marker',
+    // };
+
+    const { 
+      points,
+    } = data;
+
+    const {
       iconMapping,
       iconAtlas,
       showCluster,
       viewState,
-      getPosition,
-      sizeScale,
       wrapLongitude,
       pickable,
-      positionKeyName,
-      ...otherProps
-    } = this.props;
+      // positionKeyName,
+      sizeUnits,
+      sizeScale,
+      sizeMinPixels,
+      ...otherConfigs
+    } = configs;
+
+    const {
+      getPosition,
+      getIcon,
+      ...otherAccessors
+    } = accessors;
 
     const layerProps = {
-      ...otherProps,
-      data,
-      getPosition,
-      sizeScale,
-      wrapLongitude,
+      ...otherConfigs,
+      ...otherAccessors,
+      data: points,
       pickable,
-      positionKeyName,
+      wrapLongitude,
+      getPosition,
       iconAtlas,
       iconMapping,
     };
 
-    const size = viewState ? Math.min(1.5**(viewState.zoom - 10), 1) : 0.4;
-
+    // debugger
     const layer = showCluster
       ? new IconClusterLayer({
         ...layerProps, 
-        id: `${this.id}-ic-child`,
+        id: `${this.id}-icon-cluster`,
+        sizeScale: 60,
       })
       : new IconLayer({
           ...layerProps,
-          id: `${this.id}-i-child`,
-          getIcon: () => 'marker',
-          getSize: size,
+          id: `${this.id}-icon`,
+          getIcon,
+          sizeUnits,
+          sizeScale,
+          sizeMinPixels
         });
 
     return [layer];
   }
 }
 
-IconMap.layerName = 'MixedIconMap';
-IconMap.defaultProps = {
-  ...IconLayer.defaultProps,
-  showCluster: true,
-  iconAtlas: 'https://raw.githubusercontent.com/uber/deck.gl/17b1b9a5c7acd4503f85b81a68560b241a0f319e/examples/website/icon/data/location-icon-atlas.png',
-  iconMapping: DEFAULT_ICONMAPPING,
-  pickable: true,
-  wrapLongitude: true,
-  getPosition: d => d.coordinates,
-  positionKeyName: 'coordinates',
-  sizeScale: {
-    type: 'number',
-    value: 60,
+CompositeIconLayer.layerName = 'CompositeIconLayer';
+CompositeIconLayer.defaultProps = {
+  configs: {
+    type: 'object', 
+    value: {
+      showCluster: true,
+      iconAtlas: 'https://raw.githubusercontent.com/uber/deck.gl/17b1b9a5c7acd4503f85b81a68560b241a0f319e/examples/website/icon/data/location-icon-atlas.png',
+      iconMapping: DEFAULT_ICONMAPPING,
+      pickable: true,
+      sizeUnits: 'meters',
+      sizeScale: 2000,
+      sizeMinPixels: 6,
+      wrapLongitude: true,
+      // positionKeyName: 'coordinates',
+    },
+  },
+  data: {
+    type: 'object', 
+    value: { 
+      points: 'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/icon/meteorites.json',
+    },
+  },
+  accessors: {
+    type: 'object', 
+    value: {
+      getPosition: d => d.coordinates,
+      getIcon: () => 'marker',
+    },
   },
 };
   
-export default IconMap;
+export default CompositeIconLayer;
