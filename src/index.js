@@ -1,6 +1,6 @@
 // import ScatterplotLayer from './layers/ScatterplotLayer/index';
 // import ScreenGridLayer from './layers/ScreenGridLayer/index';
-// import IconLayer from './layers/IconLayer/index';
+import IconLayer from './layers/IconLayer/index';
 // import HexagonLayer from './layers/HexagonLayer/index';
 // import ArcLayer from './layers/ArcLayer/animate';
 // import Globe from './globe/index';
@@ -12,7 +12,7 @@ import * as d3 from 'd3';
 const glmaps = {
   // ScatterplotLayer,
   // ScreenGridLayer,
-  // IconLayer,
+  IconLayer,
   // HexagonLayer,
   // ArcLayer,
   // Globe,

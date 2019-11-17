@@ -10,7 +10,7 @@ import { PolygonLayer } from '@deck.gl/layers';
 import { CompositeLayer } from 'deck.gl';
 import { DEFAULT_THEME, DATA_URL, } from './config';
 
-class TripLayer extends CompositeLayer {
+class CompositeTripLayer extends CompositeLayer {
   initializeState() {
     this.state = {
       time: 0,
@@ -121,5 +121,5 @@ class TripLayer extends CompositeLayer {
   }
 }
 
-TripLayer.layerName = 'TripLayer';
-export default TripLayer;
+CompositeTripLayer.layerName = 'CompositeTripLayer';
+export default CompositeTripLayer;

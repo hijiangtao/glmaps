@@ -3,8 +3,10 @@ import {StaticMap} from 'react-map-gl';
 import DeckGL from '@deck.gl/react';
 import './App.css';
 import glmaps from 'glmaps';
+import { LAYER_CONFIGS } from './utils/default';
 const {
   TripLayer,
+  IconLayer,
 } = glmaps;
 
 function getParameterByName(name, url) {
@@ -18,9 +20,9 @@ function getParameterByName(name, url) {
 }
 
 function App() {
-  const 
-    controller = true, 
-    baseMap = true;
+  const layer = 'IconLayer';
+  const controller = true;
+  const baseMap = true;
   const mapboxToken = getParameterByName('MAPBOX_TOKEN');
 
   return (
@@ -51,20 +53,15 @@ function App() {
           // width="100%" 
           // height="100%" 
           layers={[
-            new TripLayer({
-              // ...LAYER_CONFIGS[layer],
-              data: {},
-              configs: {},
-              accessors: {},
-            }),
+            // new TripLayer({
+            //   // ...LAYER_CONFIGS[layer],
+            //   data: {},
+            //   configs: {},
+            //   accessors: {},
+            // }),
+            new IconLayer({}),
           ]}
-          viewState={{
-            longitude: -74,
-            latitude: 40.72,
-            zoom: 13,
-            pitch: 45,
-            bearing: 0
-          }}
+          viewState={LAYER_CONFIGS[layer].INIT_VIEW_STATE}
           onViewStateChange={() => {}}
           controller={true}
         >
