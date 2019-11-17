@@ -53,6 +53,9 @@ function App() {
           layers={[
             new TripLayer({
               // ...LAYER_CONFIGS[layer],
+              data: {},
+              configs: {},
+              accessors: {},
             }),
           ]}
           viewState={{
