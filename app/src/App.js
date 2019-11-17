@@ -21,7 +21,6 @@ function getParameterByName(name, url) {
 
 function App() {
   const layer = 'IconLayer';
-  const controller = true;
   const baseMap = true;
   const mapboxToken = getParameterByName('MAPBOX_TOKEN');
 

@@ -37,6 +37,7 @@
     "rbush": "^2.0.2",
     "react": "^16.8.0",
     "react-map-gl": "^4.0.10",
+    "supercluster": "^7.0.0",
     "three": "^0.110.0",
     "three-trackballcontrols": "0.0.7"
   },
