@@ -36,7 +36,7 @@
     "rbush": "^2.0.2",
     "react": "^16.8.0",
     "react-map-gl": "^4.0.10",
-    "three": "^0.100.0",
+    "three": "^0.125.0",
     "three-trackballcontrols": "0.0.7"
   },
   "devDependencies": {
